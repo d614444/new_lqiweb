@@ -1,6 +1,12 @@
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-# Create your models here.
 
 class Pricetable1(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
@@ -32,8 +38,8 @@ class Pricetable3(models.Model):
 
 
 class Pricetable4(models.Model):
-    id = models.OneToOneField(Pricetable1, on_delete=models.CASCADE, related_name='pricetable4_id', db_column='ID', primary_key=True)  # Field name made lowercase.
-    f01 = models.OneToOneField(Pricetable2, on_delete=models.CASCADE, related_name='pricetable4_f01', db_column='F01', blank=True, null=True)  # Field name made lowercase.
+    id = models.ForeignKey(Pricetable1, models.DO_NOTHING, db_column='ID', primary_key=True)  # Field name made lowercase.
+    f01 = models.ForeignKey(Pricetable2, models.DO_NOTHING, db_column='F01', blank=True, null=True)  # Field name made lowercase.
     f02 = models.TextField(db_column='F02', blank=True, null=True)  # Field name made lowercase.
     f03 = models.FloatField(db_column='F03', blank=True, null=True)  # Field name made lowercase.
     f04 = models.CharField(db_column='F04', max_length=45, blank=True, null=True)  # Field name made lowercase.
@@ -42,7 +48,7 @@ class Pricetable4(models.Model):
     f08 = models.CharField(db_column='F08', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f09 = models.CharField(db_column='F09', max_length=70, blank=True, null=True)  # Field name made lowercase.
     f10 = models.CharField(db_column='F10', max_length=45, blank=True, null=True)  # Field name made lowercase.
-    f11 = models.OneToOneField(Pricetable3, on_delete=models.CASCADE, related_name='pricetable4_f11', db_column='F11', blank=True, null=True)  # Field name made lowercase.
+    f11 = models.ForeignKey(Pricetable3, models.DO_NOTHING, db_column='F11', blank=True, null=True)  # Field name made lowercase.
     f12 = models.CharField(db_column='F12', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f13 = models.CharField(db_column='F13', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f15 = models.FloatField(db_column='F15', blank=True, null=True)  # Field name made lowercase.
@@ -53,7 +59,7 @@ class Pricetable4(models.Model):
 
 
 class Pricetable5(models.Model):
-    id = models.OneToOneField(Pricetable1, on_delete=models.CASCADE, db_column='ID', related_name='pricetable5_id', primary_key=True)  # Field name made lowercase.
+    id = models.ForeignKey(Pricetable1, models.DO_NOTHING, db_column='ID', primary_key=True)  # Field name made lowercase.
     f07 = models.CharField(db_column='F07', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f14 = models.CharField(db_column='F14', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f26 = models.FloatField(db_column='F26', blank=True, null=True)  # Field name made lowercase.
@@ -67,7 +73,7 @@ class Pricetable5(models.Model):
 
 
 class Pricetable6(models.Model):
-    id = models.OneToOneField(Pricetable1, on_delete=models.CASCADE, db_column='ID', related_name='pricetable6_id', primary_key=True)  # Field name made lowercase.
+    id = models.ForeignKey(Pricetable1, models.DO_NOTHING, db_column='ID', primary_key=True)  # Field name made lowercase.
     f16 = models.CharField(db_column='F16', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f17 = models.CharField(db_column='F17', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f18 = models.CharField(db_column='F18', max_length=45, blank=True, null=True)  # Field name made lowercase.
@@ -83,7 +89,7 @@ class Pricetable6(models.Model):
 
 
 class Pricetable7(models.Model):
-    id = models.OneToOneField(Pricetable1, on_delete=models.CASCADE, db_column='ID', related_name='pricetable7_id', primary_key=True)  # Field name made lowercase.
+    id = models.ForeignKey(Pricetable1, models.DO_NOTHING, db_column='ID', primary_key=True)  # Field name made lowercase.
     f21 = models.FloatField(db_column='F21', blank=True, null=True)  # Field name made lowercase.
     f22 = models.FloatField(db_column='F22', blank=True, null=True)  # Field name made lowercase.
     f21a = models.FloatField(db_column='F21a', blank=True, null=True)  # Field name made lowercase.
