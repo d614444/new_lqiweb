@@ -1,11 +1,10 @@
 from webpage.models import Pricetable1, Pricetable2, Pricetable3, Pricetable4, Pricetable5, Pricetable6, Pricetable7
 from rest_framework import serializers
 
+class Pricetable1Serializer(serializers.ModelSerializer):
+	f22c = serializers.FloatField(source='pricetable7_id.f22c')
+	f04 = serializers.CharField(source='pricetable4_id.f04')
 
-
-class Pricetable4Serializer(serializers.HyperlinkedModelSerializer):
-    #p1 = Pricetable1Serializer(read_only=True)
-    id_name = serializers.HyperlinkedRelatedField(view_name='ladntable',queryset=Pricetable4.objects.all())
-    class Meta:
-        model = Pricetable4
-        fields = ('id', 'f02', 'f03','id_name')         
+	class Meta:
+		model = Pricetable1
+		fields = ('id', 'f00', 'f22c','f04')
