@@ -2,17 +2,6 @@ from django.db import models
 
 # Create your models here.
 
-class Pricetable1(models.Model):
-    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
-    f30 = models.CharField(db_column='F30', unique=True, max_length=50)  # Field name made lowercase.
-    f32 = models.CharField(db_column='F32', max_length=45, blank=True, null=True)  # Field name made lowercase.
-    f00 = models.CharField(db_column='F00', max_length=45, blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'pricetable1'
-
-
 class Pricetable2(models.Model):
     code = models.IntegerField(db_column='CODE', primary_key=True)  # Field name made lowercase.
     build_type = models.CharField(db_column='BUILD_TYPE', max_length=45, blank=True, null=True)  # Field name made lowercase.
@@ -30,10 +19,19 @@ class Pricetable3(models.Model):
         managed = False
         db_table = 'pricetable3'
 
+class Pricetable1(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    f30 = models.CharField(db_column='F30', unique=True, max_length=50)  # Field name made lowercase.
+    f32 = models.CharField(db_column='F32', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    f00 = models.CharField(db_column='F00', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    f01 = models.OneToOneField(Pricetable2, on_delete=models.CASCADE, related_name='pricetable1_f01', db_column='F01', blank=True, null=True)
+    f11 = models.OneToOneField(Pricetable3, on_delete=models.CASCADE, related_name='pricetable1_f11', db_column='F11', blank=True, null=True)
+    class Meta:
+        managed = False
+        db_table = 'pricetable1'
 
 class Pricetable4(models.Model):
     id = models.OneToOneField(Pricetable1, on_delete=models.CASCADE, related_name='pricetable4_id', db_column='ID', primary_key=True)  # Field name made lowercase.
-    f01 = models.OneToOneField(Pricetable2, on_delete=models.CASCADE, related_name='pricetable4_f01', db_column='F01', blank=True, null=True)  # Field name made lowercase.
     f02 = models.TextField(db_column='F02', blank=True, null=True)  # Field name made lowercase.
     f03 = models.FloatField(db_column='F03', blank=True, null=True)  # Field name made lowercase.
     f04 = models.CharField(db_column='F04', max_length=45, blank=True, null=True)  # Field name made lowercase.
@@ -42,7 +40,6 @@ class Pricetable4(models.Model):
     f08 = models.CharField(db_column='F08', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f09 = models.CharField(db_column='F09', max_length=70, blank=True, null=True)  # Field name made lowercase.
     f10 = models.CharField(db_column='F10', max_length=45, blank=True, null=True)  # Field name made lowercase.
-    f11 = models.OneToOneField(Pricetable3, on_delete=models.CASCADE, related_name='pricetable4_f11', db_column='F11', blank=True, null=True)  # Field name made lowercase.
     f12 = models.CharField(db_column='F12', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f13 = models.CharField(db_column='F13', max_length=45, blank=True, null=True)  # Field name made lowercase.
     f15 = models.FloatField(db_column='F15', blank=True, null=True)  # Field name made lowercase.
