@@ -15,13 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from webpage.views import Get_landdata
+from webpage.views import Get_landdata, homepage
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'P4', Get_landdata)
+router.register(r'landpoint', Get_landdata)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'api/', include(router.urls))
+    path(r'api/', include(router.urls)),
+    path('home/', homepage)
 ]

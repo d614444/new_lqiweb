@@ -1,0 +1,38 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	{% load staticfiles %}
+	<script
+  	src="https://code.jquery.com/jquery-3.3.1.min.js"
+  	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  	crossorigin="anonymous"></script>
+	<script type = "text/javascript" src ="{% static "js/area_list.js" %}"></script>
+	<link href="{% static 'css/lqi_css.css' %}" rel="stylesheet">
+	<title>welcometolqi</title>
+<body>
+    <div class = "head_bar">
+		<div id = lqi_logo>
+			<img id = lqi_logo_pic src="{% static "images/LQI_logo_1.png" %}">
+		</div>
+			<span id = 'title'>歡迎來到苙寬資料庫</span>
+	</div>
+	<div class="list_for_price">
+    	<div class = 'area'>
+    		<form  name = 'area_form' method="POST" >
+    		{% csrf_token %}
+            	<span>選擇縣市</span>
+            	<select id = "country-list" name = "country-list"  ></select>
+            	<span>選擇區域</span>
+            	<select name="area-list" id="area-list"></select>
+							</br></br>
+				<span>交易年份</span>
+				<select id = "price-time_1" name = "price-time_1"  ></select>
+				<span>-</span>
+				<select id = "price-time_2" name = "price-time_2"></select>
+           		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
+    		</form>
+    	</div>
+	</div>		
+</body>
+</html>
