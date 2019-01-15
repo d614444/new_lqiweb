@@ -15,11 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from webpage.views import Get_landdata, homepage
+from webpage.views import Get_landdata_all, Get_landdata_A,  Get_landdata_B, Get_landdata_C, Get_landdata_D, homepage
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register(r'landpoint', Get_landdata)
+router.register(r'landpoint_all', Get_landdata_all, 'alldata')
+router.register(r'landpoint_A', Get_landdata_A, 'A')
+router.register(r'landpoint_B', Get_landdata_B, 'B')
+router.register(r'landpoint_C', Get_landdata_C, 'C')
+router.register(r'landpoint_D', Get_landdata_D, 'D')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

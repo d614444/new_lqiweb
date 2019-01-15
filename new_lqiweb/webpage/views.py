@@ -14,15 +14,25 @@ aprm_id = {'臺北市':'A', '臺中市':'B', '基隆市':'C',
 
 
 
-
-class Get_landdata(viewsets.ModelViewSet):
-
-    queryset = Pricetable1.objects.filter(f32=aprm_id[country_ID])
+class Get_landdata_all(viewsets.ModelViewSet):
+    queryset = Pricetable1.objects.all()
     serializer_class = Pricetable1Serializer
-        
 
-    def homepage(request):
-        if request.method == 'POST':
-        	country_ID = ''
-            country_ID = (request.POST['country-list'])
-        return render(request, 'page_home.html')
+class Get_landdata_A(viewsets.ModelViewSet):
+    queryset = Pricetable1.objects.filter(f32='A')
+    serializer_class = Pricetable1Serializer
+
+class Get_landdata_B(viewsets.ModelViewSet):
+    queryset = Pricetable1.objects.filter(f32='B')
+    serializer_class = Pricetable1Serializer
+
+class Get_landdata_C(viewsets.ModelViewSet):
+    queryset = Pricetable1.objects.filter(f32='C')
+    serializer_class = Pricetable1Serializer
+
+class Get_landdata_D(viewsets.ModelViewSet):
+    queryset = Pricetable1.objects.filter(f32='D')
+    serializer_class = Pricetable1Serializer       
+
+def homepage(request):
+    return render(request, 'page_home.html')    
