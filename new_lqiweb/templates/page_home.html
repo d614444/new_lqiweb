@@ -19,7 +19,7 @@
 	</div>
 	<div class="list_for_price">
     	<div class = 'area'>
-    		<form  name = 'area_form' method="POST" >
+    		<form  name = 'area_form' id = 'area_form' method="post" >
     		{% csrf_token %}
             	<span>選擇縣市</span>
             	<select id = "country-list" name = "country-list"  ></select>
@@ -35,7 +35,51 @@
     	</div>
 	</div>
 	<script >
+	$(function(){
+		var country_list = {
+			'臺北市' : "A" , '臺中市' : "B", '基隆市' : "C",
+			'臺南市' : "D" , '高雄市' : "E", '新北市' : "F",
+			'宜蘭縣' : "G" , '桃園市' : "H", '新竹縣' : "J",
+			'新竹市' : "O" ,
+		}
+
+		$('#area_form').submit(function(event) {
+			event.preventDefault();
+			var area_form = $('#area_form').serializeArray()
+			var country = area_form[1]["value"]
+			var country_area = area_form[2]["value"]
+			var year_1 = area_form[3]["value"]
+			var year_2 = area_form[4]["value"]
+
+			console.log(country_list[country])
 		
+		$.ajax({
+			async : false,
+			datatype : 'json',
+			url : "http://127.0.0.1:8000/api/landpoint_"+country_list[country],
+			success : function(data){
+		
+				for (var i=0; i=(Math.floor(data["count"]/20)); i++){
+				$.ajax({
+					async : false,
+					datatype : 'json',
+					url : 'http://127.0.0.1:8000/api/landpoint_A/?page='+i,
+					success : function(data){
+						console.log(data)
+					}
+
+				})}
+
+				/*
+				var a = 0 
+				for (var i = 0; i<data["results"]["length"]; i++){
+					var price = data["results"][i]['f21a']
+					a += price
+					console.log(a)
+				}*/
+			}});
+		});
+		})
 	</script>		
 </body>
 </html>
