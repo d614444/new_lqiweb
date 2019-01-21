@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from webpage.models import Pricetable1, Pricetable2, Pricetable3, Pricetable4, Pricetable5, Pricetable6, Pricetable7
 from rest_framework.views import APIView
-from webpage.serializers import Pricetable1Serializer
+from webpage.serializers import Pricetable1Serializer, Pricecalculater
 from rest_framework.response import Response
 from rest_framework import viewsets
 from django.shortcuts import render
+from django.db.models import Avg, Sum
 # Create your views here.
 
 aprm_id = {'臺北市':'A', '臺中市':'B', '基隆市':'C', 
@@ -32,7 +33,16 @@ class Get_landdata_C(viewsets.ModelViewSet):
 
 class Get_landdata_D(viewsets.ModelViewSet):
     queryset = Pricetable1.objects.filter(f32='D')
-    serializer_class = Pricetable1Serializer       
+    serializer_class = Pricetable1Serializer
+
+class Get_landdata_avgtest(viewsets.ModelViewSet):
+    a = Pricetable7.objects.filter(id_id__f32='D').aggregate(Avg('f21a')).get('f21a__avg')
+    queryset = Pricetable7.objects.filter(id_id__f32='D')
+    serializer_class = Pricecalculater
+
+
+ 
+
 
 def homepage(request):
     return render(request, 'page_home.html')    

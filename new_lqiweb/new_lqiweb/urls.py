@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from webpage.views import Get_landdata_all, Get_landdata_A,  Get_landdata_B, Get_landdata_C, Get_landdata_D, homepage
+from webpage.views import Get_landdata_all, Get_landdata_A,  Get_landdata_B, Get_landdata_C, Get_landdata_D, homepage, Get_landdata_avgtest
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -24,6 +24,7 @@ router.register(r'landpoint_A', Get_landdata_A, 'A')
 router.register(r'landpoint_B', Get_landdata_B, 'B')
 router.register(r'landpoint_C', Get_landdata_C, 'C')
 router.register(r'landpoint_D', Get_landdata_D, 'D')
+router.register(r'avg', Get_landdata_avgtest, 'avg')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
