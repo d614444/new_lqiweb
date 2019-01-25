@@ -4,45 +4,54 @@ from rest_framework.views import APIView
 from webpage.serializers import Pricetable1Serializer, Pricecalculater
 from rest_framework.response import Response
 from rest_framework import viewsets
-from django.shortcuts import render
-from django.db.models import Avg, Sum
+from django.http import HttpResponse
+from django.db.models import Avg, Sum, Q
+from rest_framework.decorators import api_view
+from rest_framework import authentication, permissions
+from rest_framework import status
 # Create your views here.
 
-aprm_id = {'臺北市':'A', '臺中市':'B', '基隆市':'C', 
-           '臺南市':'D', '高雄市':'E', '新北市':'F', 
-           '宜蘭縣':'G', '桃園市':'H', '新竹縣':'J', 
-           '新竹市':'O'}
+#filter(pricetable5_f01__f07__regex = r'^102'
 
+cotent ={}
+month = [
+         '01', '02', '03', 
+         '04', '05', '06', 
+         '07', '08', '09',
+         '10', '11', '12'
+         ]
+class testcustomapi(APIView):
 
+    @api_view(['GET', 'POST'])
+    def get(request, format=None):
 
-class Get_landdata_all(viewsets.ModelViewSet):
-    queryset = Pricetable1.objects.all()
-    serializer_class = Pricetable1Serializer
-
-class Get_landdata_A(viewsets.ModelViewSet):
-    queryset = Pricetable1.objects.filter(f32='A')
-    serializer_class = Pricetable1Serializer
-
-class Get_landdata_B(viewsets.ModelViewSet):
-    queryset = Pricetable1.objects.filter(f32='B')
-    serializer_class = Pricetable1Serializer
-
-class Get_landdata_C(viewsets.ModelViewSet):
-    queryset = Pricetable1.objects.filter(f32='C')
-    serializer_class = Pricetable1Serializer
-
-class Get_landdata_D(viewsets.ModelViewSet):
-    queryset = Pricetable1.objects.filter(f32='D')
-    serializer_class = Pricetable1Serializer
-
-class Get_landdata_avgtest(viewsets.ModelViewSet):
-    a = Pricetable7.objects.filter(id_id__f32='D').aggregate(Avg('f21a')).get('f21a__avg')
-    queryset = Pricetable7.objects.filter(id_id__f32='D')
-    serializer_class = Pricecalculater
-
-
- 
+        if request.method == 'POST':   
+            country = request.POST.get('country')
+            country_area = request.POST.get('country_area')
+            year_1 = request.POST.get('year_1')
+            year_2 = request.POST.get('year_2')
+            global cotent
+            if (
+                country_area == '全部' and 
+                year_1 == '全部'
+                ):
+                for i in range(12):
+                    regex_value = (r'^.{3,4}'+month[i])
+                    #print (month[i])
+                    average= Pricetable1.objects.filter(
+                        f32=country ,
+                        ).filter(
+                        Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                        ).filter(pricetable5_f01__f07__regex = regex_value
+                        ).aggregate(Avg('pricetable7_f01__f21a')).get('pricetable7_f01__f21a__avg')
+                    cotent[i+1] = average
+                return Response(cotent)
+            else:
+                print ("next step!")
+        return Response(cotent, status=status.HTTP_200_OK) 
 
 
 def homepage(request):
-    return render(request, 'page_home.html')    
+
+    return render(request, 'page_home.html')
+

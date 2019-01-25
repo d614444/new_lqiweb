@@ -46,40 +46,35 @@
 		$('#area_form').submit(function(event) {
 			event.preventDefault();
 			var area_form = $('#area_form').serializeArray()
-			var country = area_form[1]["value"]
+			var country = country_list[area_form[1]["value"]]
 			var country_area = area_form[2]["value"]
 			var year_1 = area_form[3]["value"]
 			var year_2 = area_form[4]["value"]
 
-			console.log(country_list[country])
+			/*console.log(country_list[country])*/
 		
 		$.ajax({
 			async : false,
+			type: "POST",
 			datatype : 'json',
-			url : "http://127.0.0.1:8000/api/landpoint_"+country_list[country],
+			url : '/testavg/',
+			data : { 
+				'country' : country,
+				'country_area' : country_area,
+				'year_1' : year_1,
+				'year_2' : year_2,
+				'csrfmiddlewaretoken': '{{ csrf_token }}',
+				 },
 			success : function(data){
-		
-				for (var i=0; i=(Math.floor(data["count"]/20)); i++){
-				$.ajax({
-					async : false,
-					datatype : 'json',
-					url : 'http://127.0.0.1:8000/api/landpoint_A/?page='+i,
-					success : function(data){
-						console.log(data)
-					}
-
-				})}
-
-				/*
-				var a = 0 
-				for (var i = 0; i<data["results"]["length"]; i++){
-					var price = data["results"][i]['f21a']
-					a += price
-					console.log(a)
-				}*/
-			}});
-		});
+				console.log(country)
+				},
+			error : function(data) {
+				console.log("fail")
+				}	
+			})
 		})
+	});
+
 	</script>		
 </body>
 </html>

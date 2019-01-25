@@ -12,7 +12,7 @@ class Pricetable1Serializer(serializers.ModelSerializer):
 		fields = ('id', 'f00', 'f07', 'f28', 'f21a', 'f22a')
 
 class Pricecalculater(serializers.ModelSerializer):
-	avg = serializers.SerializerMethodField()
+	#avg = serializers.SerializerMethodField()
 	
 	#def avgprice(self, obj):
 		#avgcal = obj.f21a
@@ -22,5 +22,3 @@ class Pricecalculater(serializers.ModelSerializer):
 		model = Pricetable7
 		fields = '__all__'
 
-	def get_avg(self, obj):
-		return obj.f21a.count()	
