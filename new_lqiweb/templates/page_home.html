@@ -7,7 +7,11 @@
   	src="https://code.jquery.com/jquery-3.3.1.min.js"
   	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   	crossorigin="anonymous"></script>
+  	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	<script src="https://code.highcharts.com/modules/export-data.js"></script>
 	<script type = "text/javascript" src ="{% static "js/area_list.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/post_ajax_data.js" %}"></script>
 	<link href="{% static 'css/lqi_css.css' %}" rel="stylesheet">
 	<title>welcometolqi</title>
 <body>
@@ -34,47 +38,12 @@
     		</form>
     	</div>
 	</div>
+	<div class = "hichart">
+		<div id = "hichart-main"></div>
+	</div>
 	<script >
-	$(function(){
-		var country_list = {
-			'臺北市' : "A" , '臺中市' : "B", '基隆市' : "C",
-			'臺南市' : "D" , '高雄市' : "E", '新北市' : "F",
-			'宜蘭縣' : "G" , '桃園市' : "H", '新竹縣' : "J",
-			'新竹市' : "O" ,
-		}
 
-		$('#area_form').submit(function(event) {
-			event.preventDefault();
-			var area_form = $('#area_form').serializeArray()
-			var country = country_list[area_form[1]["value"]]
-			var country_area = area_form[2]["value"]
-			var year_1 = area_form[3]["value"]
-			var year_2 = area_form[4]["value"]
-
-			/*console.log(country_list[country])*/
-		
-		$.ajax({
-			async : false,
-			type: "POST",
-			datatype : 'json',
-			url : '/testavg/',
-			data : { 
-				'country' : country,
-				'country_area' : country_area,
-				'year_1' : year_1,
-				'year_2' : year_2,
-				'csrfmiddlewaretoken': '{{ csrf_token }}',
-				 },
-			success : function(data){
-				console.log(country)
-				},
-			error : function(data) {
-				console.log("fail")
-				}	
-			})
-		})
-	});
-
+	
 	</script>		
 </body>
 </html>

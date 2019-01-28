@@ -18,11 +18,12 @@ from django.urls import path, include
 from webpage.views import testcustomapi,homepage
 from rest_framework import routers
 
-
+#router = routers.SimpleRouter()
+#router.register(r'testrouteavg', testcustomapi.Get_Ajax_Data)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', homepage),
-    path('testavg/', testcustomapi.get, name = 'testcustomapi')
+    path('testavg/', testcustomapi.Get_Ajax_Data, name = 'testcustomapi')
 
 ]

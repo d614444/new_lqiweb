@@ -59,18 +59,12 @@
 		border-width: 1px;
 
 	}
-	#hichart_test{
+	#hichart-main{
 
 		height: 100%;
 		width: 80%;
 
 	}
-
-
-
-
-
-
 	#table_price{
 		display: table;
 		border: 0.5px solid black;
