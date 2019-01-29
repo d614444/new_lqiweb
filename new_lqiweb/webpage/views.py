@@ -9,14 +9,16 @@ from django.db.models import Avg, Sum, Q
 from rest_framework.decorators import api_view
 from rest_framework import authentication, permissions
 from rest_framework import status
+import numpy as np
+import math
 
 # Create your views here.
 
 #filter(pricetable5_f01__f07__regex = r'^102'
 
-cotent ={}
+content ={}
 price_list = []
-price_month = []
+testlist = []
 Area_dic = {
             'A' : ['松山區', '大安區', '大同區', '中正區', '中山區', '萬華區',
                     '信義區', '士林區', '北投區', '內湖區', '南港區', '文山區'],
@@ -72,50 +74,193 @@ class testcustomapi(APIView):
             country_area = request.POST.get('country_area')
             year_1 = request.POST.get('year_1')
             year_2 = request.POST.get('year_2')
-            global cotent
+            global content
             global price_list
-            cotent ={}
+            content ={}
             if (
                 country_area == '全部' and 
                 year_1 == '全部'
                 ):
-                #for country_area_id in Area_dic[country]:
                     average_list = Pricetable1.objects.filter(
                             f32=country
                             ).filter(
                             Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
                             ).filter(
                             pricetable5_f01__f28='N'
-                            ).values_list('f00','pricetable7_f01__f21a', 'pricetable5_f01__f07')
-                    print (len(average_list))
-                    for i in range(12):            
-                        for country_area_id in Area_dic[country]:
-                            print (country_area_id)
-                            for fix_data in average_list:
-                                if country_area_id == fix_data[0]:
-                                #print (fix_data[0])
-                                    if fix_data[2][3:5] == month[i]:
-                                        price_month = []
-                                        #global price_month 
-                                        price_month.append(fix_data[2])
+                            ).exclude(
+                            pricetable7_f01__f21a__isnull=True
+                            ).exclude( pricetable7_f01__f21a=0
+                            ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')      
+                    for country_area_id in Area_dic[country]:
+                        for month_number in range(12):
+                            testlist = []
+                            for check_month in average_list:
+                                if (check_month[2][3:5] == month[month_number] and
+                                    check_month[0] == country_area_id):
+                                    testlist.append(check_month[1])     
+                            a = np.mean(testlist)
+                            a_round = round(a,2)
+                            a_round = np.array(a_round)
+                            a_round = np.where(np.isnan(a_round), 0, a_round)        
+                            price_list.append(a_round)
+                        content[country_area_id] = price_list
+                        price_list = []
+            elif (
+                country_area == '全部' and 
+                year_2 == '--'
+                ):
+                    average_list = Pricetable1.objects.filter(
+                        f32=country,
+                        ).filter(
+                        Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                        ).filter(
+                        pricetable5_f01__f28='N'
+                        ).filter(
+                        pricetable5_f01__f07__regex = (r'^'+year_1)
+                        ).exclude(
+                        pricetable7_f01__f21a__isnull=True
+                        ).exclude( pricetable7_f01__f21a=0
+                        ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
+                    for country_area_id in Area_dic[country]:
+                        for month_number in range(12):
+                            testlist = []    
+                            for check_month in average_list:
+                                if (check_month[2][3:5] == month[month_number] and
+                                    check_month[0] == country_area_id):
+                                    testlist.append(check_month[1])     
+                            a = np.mean(testlist)
+                            a_round = round(a,2)
+                            a_round = np.array(a_round)
+                            a_round = np.where(np.isnan(a_round), 0, a_round)        
+                            price_list.append(a_round)
+                        content[country_area_id] = price_list
+                        price_list = []
+            elif (
+                 country_area == '全部'
+                 ):
+                    year_range_1 = year_1[2]
+                    year_range_2 = year_2[2]
+                    regextest = r'^(10[{0}-{1}])'.format(year_range_1,year_range_2)
+                    average_list = Pricetable1.objects.filter(
+                        f32=country,
+                        ).filter(
+                        Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                        ).filter(
+                        pricetable5_f01__f28='N'
+                        ).filter(
+                        pricetable5_f01__f07__regex = regextest
+                        ).exclude(
+                        pricetable7_f01__f21a__isnull=True
+                        ).exclude( pricetable7_f01__f21a=0
+                        ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
+                    for country_area_id in Area_dic[country]:
+                        for month_number in range(12):
+                            testlist = []    
+                            for check_month in average_list:
+                                if (check_month[2][3:5] == month[month_number] and
+                                    check_month[0] == country_area_id):
+                                    testlist.append(check_month[1])     
+                            a = np.mean(testlist)
+                            a_round = round(a,2)
+                            a_round = np.array(a_round)
+                            a_round = np.where(np.isnan(a_round), 0, a_round)        
+                            price_list.append(a_round)
+                        content[country_area_id] = price_list
+                        price_list = []    
 
-                        price_list.append(price_month)   
-                        #price_list.append(price_month[1])
-                                    #regex_value = (r'^.{3,4}'+month[i])
-                                    #print (fix_data[2][3:5])
-                                    #print (month[i])
-                                    
-                                       # price_list.append(fix_data[2])
-                                        #print (fix_data[2])
-                                        #price_list = []        
-                    #print (average_list)        
-                        #price_list.append(round(average,2))
-                    print (price_list[0])    
-                    #cotent[country_area_id] = price_list
-                    #price_list = []
-            return Response(cotent)
- 
-        return Response(cotent, status=status.HTTP_200_OK) 
+            else:
+                if (
+                    year_1 == '全部'
+                    ):
+                    average_list = Pricetable1.objects.filter(
+                    f32=country, 
+                    f00=country_area
+                    ).filter(
+                    Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                    ).filter(
+                    pricetable5_f01__f28='N'
+                    ).exclude(
+                    pricetable7_f01__f21a__isnull=True
+                    ).exclude(
+                    pricetable7_f01__f21a=0
+                    ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
+                    for month_number in range(12):
+                        testlist = []
+                        for check_month in average_list:
+                            if (check_month[2][3:5] == month[month_number]):
+                                testlist.append(check_month[1])
+                        a = np.mean(testlist)
+                        a_round = round(a,2)
+                        a_round = np.array(a_round)
+                        a_round = np.where(np.isnan(a_round), 0, a_round)
+                        price_list.append(a_round)         
+                    content[country_area] = price_list
+                    price_list = []
+
+                else:
+                    if (
+                        year_2 == '--'
+                        ):
+                            average_list = Pricetable1.objects.filter(
+                            f32=country, 
+                            f00=country_area
+                            ).filter(
+                            Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                            ).filter(
+                            pricetable5_f01__f07__regex = (r'^'+year_1)
+                            ).filter(
+                            pricetable5_f01__f28='N'
+                            ).exclude(
+                            pricetable7_f01__f21a__isnull=True
+                            ).exclude(
+                            pricetable7_f01__f21a=0
+                            ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
+                            for month_number in range(12):
+                                testlist = []
+                                for check_month in average_list:
+                                    if (check_month[2][3:5] == month[month_number]):
+                                        testlist.append(check_month[1])
+                                a = np.mean(testlist)
+                                a_round = round(a,2)
+                                a_round = np.array(a_round)
+                                a_round = np.where(np.isnan(a_round), 0, a_round)
+                                price_list.append(a_round)         
+                                print (a_round)
+                            content[country_area] = price_list
+                            price_list = []
+                    else:
+                        year_range_1 = year_1[2]
+                        year_range_2 = year_2[2]
+                        regextest = r'^(10[{0}-{1}])'.format(year_range_1,year_range_2)
+                        average_list = Pricetable1.objects.filter(
+                            f32=country, 
+                            f00=country_area
+                            ).filter(
+                            Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                            ).filter(
+                            pricetable5_f01__f07__regex = regextest
+                            ).filter(
+                            pricetable5_f01__f28='N'
+                            ).exclude(
+                            pricetable7_f01__f21a__isnull=True
+                            ).exclude(
+                            pricetable7_f01__f21a=0
+                            ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
+                        for month_number in range(12):
+                                testlist = []
+                                for check_month in average_list:
+                                    if (check_month[2][3:5] == month[month_number]):
+                                        testlist.append(check_month[1])
+                                a = np.mean(testlist)
+                                a_round = round(a,2)
+                                a_round = np.array(a_round)
+                                a_round = np.where(np.isnan(a_round), 0, a_round)
+                                price_list.append(a_round)         
+                                print (a_round)
+                        content[country_area] = price_list
+                        price_list = []       
+            return Response(content)
+        return Response(content, status=status.HTTP_200_OK) 
 
 def homepage(request):
 

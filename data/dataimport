@@ -1,4 +1,0 @@
-load data local infile '/home/d614444/lqiweb/data/test.csv'
-into table taipei_price
-fields terminated by ','
-lines terminated by '\n';

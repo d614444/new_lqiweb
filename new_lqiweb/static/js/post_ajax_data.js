@@ -1,4 +1,5 @@
 $(function(){
+		
 		var country_list = {
 			'臺北市' : "A" , '臺中市' : "B", '基隆市' : "C",
 			'臺南市' : "D" , '高雄市' : "E", '新北市' : "F",
@@ -25,11 +26,20 @@ $(function(){
 				'csrfmiddlewaretoken': '{{ csrf_token }}',
 				 },
 			success : function(data){
+				var datafinish = []
 				$.ajax({
+
 					url: '/testavg/',
 					dataType: 'json',
 					success : function(data){
-						console.log(data);
+
+						areakey = Object.keys(data)
+						for (var i=0; i<areakey.length; i++){
+							/*console.log(areakey[i], data[areakey[i]])*/
+							var dataload = {name:areakey[i], data:data[areakey[i]]};
+							datafinish.push(dataload)
+						}
+						
 
 						Highcharts.chart('hichart-main', {
 
@@ -38,7 +48,7 @@ $(function(){
 			    		},
 
 			    		subtitle: {
-			        		text: 'Source: thesolarfoundation.com'
+			        		text: '苙寬資訊版權所有'
 			    		},
 
 						xAxis:{
@@ -64,7 +74,7 @@ $(function(){
 
 			        				}
 			   		 	},
-			    		series:data,
+			    		series:datafinish,
 			    		responsive: {
 			        		rules: [{
 			            		condition: {
