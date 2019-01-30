@@ -24,6 +24,7 @@ from rest_framework import routers
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', homepage),
-    path('testavg/', testcustomapi.Get_Ajax_Data, name = 'testcustomapi')
+    path('testavg/', testcustomapi.Get_Ajax_Data_landprice, name = 'testcustomapi'),
+    path('teststatic/', testcustomapi.Get_Ajax_Data_peoplestatic, name = 'testcustomapipeoplestatic' )
 
 ]

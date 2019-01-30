@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from webpage.models import Pricetable1, Pricetable2, Pricetable3, Pricetable4, Pricetable5, Pricetable6, Pricetable7
+from webpage.models import Pricetable1, Pricetable2, Pricetable3, Pricetable4, Pricetable5, Pricetable6, Pricetable7, PeopleStatic
 from rest_framework.views import APIView
 from webpage.serializers import Pricetable1Serializer, Pricecalculater
 from rest_framework.response import Response
@@ -59,6 +59,10 @@ Area_dic = {
             'J' : ['東區','北區','香山區']
 
             }
+year = ['100', '101', '102',
+        '103', '104', '105',
+        '106', '107'
+        ]            
 month = [
          '01', '02', '03', 
          '04', '05', '06', 
@@ -68,7 +72,7 @@ month = [
 class testcustomapi(APIView):
  
     @api_view(['GET', 'POST'])
-    def Get_Ajax_Data(request, format=None):
+    def Get_Ajax_Data_landprice(request, format=None):
         if request.method == 'POST':   
             country = request.POST.get('country')
             country_area = request.POST.get('country_area')
@@ -261,6 +265,58 @@ class testcustomapi(APIView):
                         price_list = []       
             return Response(content)
         return Response(content, status=status.HTTP_200_OK) 
+    @api_view(['GET', 'POST'])
+    def Get_Ajax_Data_peoplestatic(request, format=None):
+        if request.method == 'POST':
+            country = request.POST.get('country')
+            country_area = request.POST.get('country_area')
+            year_1 = request.POST.get('year_1')
+            year_2 = request.POST.get('year_2')
+            print (country)
+            global content
+            global price_list
+            content ={}
+            if (
+            country_area == '全部' 
+            ):
+                average_list = PeopleStatic.objects.filter(
+                        sp00=country
+                        ).filter(sp03__regex = (r'^'+year_1)
+                        ).order_by(
+                        'sp03'
+                        ).values_list('sp01', 'sp02', 'sp03')
+                        
+                for country_area_id in Area_dic[country]:
+                        testlist = []
+                        for check_month in average_list:
+                            if (check_month[0] == country_area_id):
+                                    print (check_month[0] ,check_month[2])
+                                    testlist.append(check_month[1])            
+                        content[country_area_id] = testlist
+                        price_list = []
+                print (content)
+            else:
+                average_list = PeopleStatic.objects.filter(
+                        sp00=country,
+                        sp01=country_area
+                        ).filter(sp03__regex = (r'^'+year_1)
+                        ).order_by(
+                        'sp03'
+                        ).values_list('sp01', 'sp02', 'sp03')
+
+                testlist = []
+                for check_month in average_list:
+ 
+                    print (check_month[0] ,check_month[1])
+                    testlist.append(check_month[1])            
+                content[country_area] = testlist
+                        #price_list = []
+                print (content)           
+            return Response(content)
+        return Response(content, status=status.HTTP_200_OK)    
+
+
+            
 
 def homepage(request):
 

@@ -92,3 +92,14 @@ class Pricetable7(models.Model):
     class Meta:
         managed = False
         db_table = 'pricetable7'
+
+class PeopleStatic(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    sp00 = models.CharField(db_column='SP00', max_length=5, blank=True, null=True)  # Field name made lowercase.
+    sp01 = models.CharField(db_column='SP01', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    sp02 = models.IntegerField(db_column='SP02', blank=True, null=True)  # Field name made lowercase.
+    sp03 = models.CharField(db_column='SP03', max_length=45, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'People_Static'       
