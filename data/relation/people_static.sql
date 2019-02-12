@@ -1,4 +1,4 @@
-use landprice;
+use lqi_static;
 CREATE TABLE People_Static (
 ID int(10) NOT NULL,
 SP00 varchar(5) DEFAULT NULL comment '縣市代碼', 

@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'new_lqiweb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'landprice',
+        'NAME': 'lqi_static',
         'USER': 'root',
         'PASSWORD': 'd0958266249',
-        'HOST': '107.167.187.126' ,
+        'HOST': 'localhost' ,
         'PORT': '',
     }
 }

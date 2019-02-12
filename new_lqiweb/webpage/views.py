@@ -69,8 +69,9 @@ month = [
          '07', '08', '09',
          '10', '11', '12'
          ]
+
 class testcustomapi(APIView):
- 
+
     @api_view(['GET', 'POST'])
     def Get_Ajax_Data_landprice(request, format=None):
         if request.method == 'POST':   
@@ -96,17 +97,7 @@ class testcustomapi(APIView):
                             ).exclude( pricetable7_f01__f21a=0
                             ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')      
                     for country_area_id in Area_dic[country]:
-                        for month_number in range(12):
-                            testlist = []
-                            for check_month in average_list:
-                                if (check_month[2][3:5] == month[month_number] and
-                                    check_month[0] == country_area_id):
-                                    testlist.append(check_month[1])     
-                            a = np.mean(testlist)
-                            a_round = round(a,2)
-                            a_round = np.array(a_round)
-                            a_round = np.where(np.isnan(a_round), 0, a_round)        
-                            price_list.append(a_round)
+                        month_area_cal(average_list, price_list, country_area_id)
                         content[country_area_id] = price_list
                         price_list = []
             elif (
@@ -126,17 +117,7 @@ class testcustomapi(APIView):
                         ).exclude( pricetable7_f01__f21a=0
                         ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
                     for country_area_id in Area_dic[country]:
-                        for month_number in range(12):
-                            testlist = []    
-                            for check_month in average_list:
-                                if (check_month[2][3:5] == month[month_number] and
-                                    check_month[0] == country_area_id):
-                                    testlist.append(check_month[1])     
-                            a = np.mean(testlist)
-                            a_round = round(a,2)
-                            a_round = np.array(a_round)
-                            a_round = np.where(np.isnan(a_round), 0, a_round)        
-                            price_list.append(a_round)
+                        month_area_cal(average_list, price_list, country_area_id)
                         content[country_area_id] = price_list
                         price_list = []
             elif (
@@ -158,17 +139,7 @@ class testcustomapi(APIView):
                         ).exclude( pricetable7_f01__f21a=0
                         ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
                     for country_area_id in Area_dic[country]:
-                        for month_number in range(12):
-                            testlist = []    
-                            for check_month in average_list:
-                                if (check_month[2][3:5] == month[month_number] and
-                                    check_month[0] == country_area_id):
-                                    testlist.append(check_month[1])     
-                            a = np.mean(testlist)
-                            a_round = round(a,2)
-                            a_round = np.array(a_round)
-                            a_round = np.where(np.isnan(a_round), 0, a_round)        
-                            price_list.append(a_round)
+                        month_area_cal(average_list, price_list, country_area_id)
                         content[country_area_id] = price_list
                         price_list = []    
 
@@ -188,16 +159,7 @@ class testcustomapi(APIView):
                     ).exclude(
                     pricetable7_f01__f21a=0
                     ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
-                    for month_number in range(12):
-                        testlist = []
-                        for check_month in average_list:
-                            if (check_month[2][3:5] == month[month_number]):
-                                testlist.append(check_month[1])
-                        a = np.mean(testlist)
-                        a_round = round(a,2)
-                        a_round = np.array(a_round)
-                        a_round = np.where(np.isnan(a_round), 0, a_round)
-                        price_list.append(a_round)         
+                    month_cal(average_list, price_list)   
                     content[country_area] = price_list
                     price_list = []
 
@@ -219,17 +181,7 @@ class testcustomapi(APIView):
                             ).exclude(
                             pricetable7_f01__f21a=0
                             ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
-                            for month_number in range(12):
-                                testlist = []
-                                for check_month in average_list:
-                                    if (check_month[2][3:5] == month[month_number]):
-                                        testlist.append(check_month[1])
-                                a = np.mean(testlist)
-                                a_round = round(a,2)
-                                a_round = np.array(a_round)
-                                a_round = np.where(np.isnan(a_round), 0, a_round)
-                                price_list.append(a_round)         
-                                print (a_round)
+                            month_cal(average_list, price_list)
                             content[country_area] = price_list
                             price_list = []
                     else:
@@ -250,21 +202,12 @@ class testcustomapi(APIView):
                             ).exclude(
                             pricetable7_f01__f21a=0
                             ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
-                        for month_number in range(12):
-                                testlist = []
-                                for check_month in average_list:
-                                    if (check_month[2][3:5] == month[month_number]):
-                                        testlist.append(check_month[1])
-                                a = np.mean(testlist)
-                                a_round = round(a,2)
-                                a_round = np.array(a_round)
-                                a_round = np.where(np.isnan(a_round), 0, a_round)
-                                price_list.append(a_round)         
-                                print (a_round)
+                        month_cal(average_list, price_list)
                         content[country_area] = price_list
                         price_list = []       
             return Response(content)
-        return Response(content, status=status.HTTP_200_OK) 
+        return Response(content, status=status.HTTP_200_OK)
+         
     @api_view(['GET', 'POST'])
     def Get_Ajax_Data_peoplestatic(request, format=None):
         if request.method == 'POST':
@@ -285,7 +228,6 @@ class testcustomapi(APIView):
                         ).order_by(
                         'sp03'
                         ).values_list('sp01', 'sp02', 'sp03')
-                        
                 for country_area_id in Area_dic[country]:
                         testlist = []
                         for check_month in average_list:
@@ -294,7 +236,6 @@ class testcustomapi(APIView):
                                     testlist.append(check_month[1])            
                         content[country_area_id] = testlist
                         price_list = []
-                print (content)
             else:
                 average_list = PeopleStatic.objects.filter(
                         sp00=country,
@@ -303,10 +244,8 @@ class testcustomapi(APIView):
                         ).order_by(
                         'sp03'
                         ).values_list('sp01', 'sp02', 'sp03')
-
                 testlist = []
                 for check_month in average_list:
- 
                     print (check_month[0] ,check_month[1])
                     testlist.append(check_month[1])            
                 content[country_area] = testlist
@@ -315,9 +254,31 @@ class testcustomapi(APIView):
             return Response(content)
         return Response(content, status=status.HTTP_200_OK)    
 
+def month_area_cal(average_list, price_list, country_area_id):
+    for month_number in range(12):
+        testlist = []
+        for check_month in average_list:
+                if (check_month[2][3:5] == month[month_number] and
+                    check_month[0] == country_area_id):
+                    testlist.append(check_month[1])     
+        a = np.mean(testlist)
+        a_round = round(a,2)
+        a_round = np.array(a_round)
+        a_round = np.where(np.isnan(a_round), 0, a_round)      
+        price_list.append(a_round)
 
-            
-
+def month_cal(average_list, price_list):
+     for month_number in range(12):
+        testlist = []
+        for check_month in average_list:
+            if (check_month[2][3:5] == month[month_number]):
+                testlist.append(check_month[1])
+        a = np.mean(testlist)
+        a_round = round(a,2)
+        a_round = np.array(a_round)
+        a_round = np.where(np.isnan(a_round), 0, a_round)
+        price_list.append(a_round)        
+          
 def homepage(request):
 
     return render(request, 'page_home.html')

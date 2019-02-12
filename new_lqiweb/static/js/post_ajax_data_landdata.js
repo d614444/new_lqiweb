@@ -23,10 +23,17 @@ $(function(){
 				'country_area' : country_area,
 				'year_1' : year_1,
 				'year_2' : year_2,
-				'csrfmiddlewaretoken': '{{ csrf_token }}',
+				/*'csrfmiddlewaretoken': '{{ csrf_token }}',*/
 				 },
 			success : function(data){
 				var datafinish = []
+				if (country_area == '全部' && year_1 == '全部'){
+					var title = area_form[1]["value"] + "歷年總價平均"
+			 	}else if (country_area == '全部' &&  year_2 == '--'){
+					var title = area_form[1]["value"] + year_1 + "年度月平均總價"
+					console.log("test")
+				}else if ()
+
 				$.ajax({
 
 					url: '/testavg/',
@@ -44,7 +51,7 @@ $(function(){
 						Highcharts.chart('hichart-main', {
 
 			    		title: {
-			        		text: 'Solar Employment Growth by Sector, 2010-2016'
+			        		text: title
 			    		},
 
 			    		subtitle: {
