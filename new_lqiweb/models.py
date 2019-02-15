@@ -8,6 +8,19 @@
 from django.db import models
 
 
+class MoneySupply(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    m1b_money = models.IntegerField(db_column='M1B_money', blank=True, null=True)  # Field name made lowercase.
+    m1b_money_rate = models.FloatField(db_column='M1B_money_rate', blank=True, null=True)  # Field name made lowercase.
+    m2_money = models.IntegerField(db_column='M2_money', blank=True, null=True)  # Field name made lowercase.
+    m2_money_rate = models.FloatField(db_column='M2_money_rate', blank=True, null=True)  # Field name made lowercase.
+    days = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'Money_Supply'
+
+
 class PeopleStatic(models.Model):
     id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
     sp00 = models.CharField(db_column='SP00', max_length=5, blank=True, null=True)  # Field name made lowercase.

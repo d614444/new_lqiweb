@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from webpage.models import Pricetable1, Pricetable2, Pricetable3, Pricetable4, Pricetable5, Pricetable6, Pricetable7, PeopleStatic
+from webpage.models import Pricetable1, Pricetable2, Pricetable3, Pricetable4, Pricetable5, Pricetable6, Pricetable7, PeopleStatic, MoneySupply, GdpStatic
 from rest_framework.views import APIView
 from webpage.serializers import Pricetable1Serializer, Pricecalculater
 from rest_framework.response import Response
@@ -19,6 +19,7 @@ import math
 content ={}
 price_list = []
 testlist = []
+
 Area_dic = {
             'A' : ['松山區', '大安區', '大同區', '中正區', '中山區', '萬華區',
                     '信義區', '士林區', '北投區', '內湖區', '南港區', '文山區'],
@@ -53,10 +54,10 @@ Area_dic = {
                     '員山鄉', '冬山鄉', '五結鄉', '三星鄉', '大同鄉', '南澳鄉'],
             'H' : ['中壢區', '平鎮區', '楊梅區', '新屋區', '桃園區', '觀音區',
                     '龜山區', '八德區', '大溪區', '復興區', '大園區', '蘆竹區'],
-            'I' : ['竹北市', '關西鎮', '新埔鎮', '竹東鎮', '湖口鄉', '橫山鄉',
+            'J' : ['竹北市', '關西鎮', '新埔鎮', '竹東鎮', '湖口鄉', '橫山鄉',
                     '新豐鄉', '芎林鄉', '寶山鄉', '北埔鄉', '峨眉鄉', '尖石鄉',
                     '五峰鄉'],
-            'J' : ['東區','北區','香山區']
+            'O' : ['東區','北區','香山區']
 
             }
 year = ['100', '101', '102',
@@ -70,8 +71,7 @@ month = [
          '10', '11', '12'
          ]
 
-class testcustomapi(APIView):
-
+class lqicustomapi(APIView):
     @api_view(['GET', 'POST'])
     def Get_Ajax_Data_landprice(request, format=None):
         if request.method == 'POST':   
@@ -252,8 +252,135 @@ class testcustomapi(APIView):
                         #price_list = []
                 print (content)           
             return Response(content)
-        return Response(content, status=status.HTTP_200_OK)    
+        return Response(content, status=status.HTTP_200_OK)
 
+    @api_view(['GET', 'POST']) 
+    def Get_Ajax_Data_money_supply(request, format=None):
+        if request.method == 'POST':
+            money_year = request.POST.get('year')
+            money_type = request.POST.get('money_type')
+            global content
+            global price_list
+            content ={}
+            if (money_type == '金額' and money_year == '全部'):
+                money_supply = MoneySupply.objects.values_list(
+                'm1b_money', 'm2_money', 'days'
+                ).order_by(
+                'days'
+                )
+                testlist_m1 = []
+                testlist_m2 = []
+                money_date = []
+                for ser_money in money_supply:
+                    testlist_m1.append(ser_money[0])
+                    testlist_m2.append(ser_money[1])
+                    money_date.append(ser_money[2])
+                content = {
+                'm1b' : testlist_m1,
+                'm2' : testlist_m2,
+                'date' : money_date
+                }    
+            elif (money_type == '年增率' and money_year == '全部'):
+                money_supply = MoneySupply.objects.values_list(
+                'm1b_money_rate', 'm2_money_rate', 'days'
+                ).order_by(
+                'days'
+                )
+                testlist_m1 = []
+                testlist_m2 = []
+                money_date = []
+                for ser_money in money_supply:
+                    testlist_m1.append(ser_money[0])
+                    testlist_m2.append(ser_money[1])
+                    money_date.append(ser_money[2])
+                content = {
+                'm1b' : testlist_m1,
+                'm2' : testlist_m2,
+                'date' : money_date
+                }
+            elif (money_type == '金額'):
+                money_supply = MoneySupply.objects.filter(
+                    days__regex = (r'^'+money_year)
+                    ).order_by(
+                    'days'
+                    ).values_list(
+                    'm1b_money', 'm2_money', 'days'
+                    )
+                testlist_m1 = []
+                testlist_m2 = []
+                money_date = []
+                for ser_money in money_supply:
+                    testlist_m1.append(ser_money[0])
+                    testlist_m2.append(ser_money[1])
+                    money_date.append(ser_money[2])
+                content = {
+                'm1b' : testlist_m1,
+                'm2' : testlist_m2,
+                'date' : money_date
+                }
+            elif (money_type == '年增率'):
+                money_supply = MoneySupply.objects.filter(
+                    days__regex = (r'^'+money_year)
+                    ).order_by(
+                    'days'
+                    ).values_list(
+                    'm1b_money_rate', 'm2_money_rate', 'days'
+                    )
+                testlist_m1 = []
+                testlist_m2 = []
+                money_date = []
+                for ser_money in money_supply:
+                    testlist_m1.append(ser_money[0])
+                    testlist_m2.append(ser_money[1])
+                    money_date.append(ser_money[2])
+                content = {
+                'm1b' : testlist_m1,
+                'm2' : testlist_m2,
+                'date' : money_date
+                }      
+                                   
+        return Response(content)
+
+    @api_view(['GET', 'POST'])    
+    def  Get_Ajax_Data_GDP(request, format=None):
+        if request.method == 'POST':
+            GDB_year = request.POST.get('year')
+            global content
+            global price_list
+            content ={}
+            if (GDB_year == '全部'):
+                GDP_data = GdpStatic.objects.values_list(
+                    'year_t', 'gdp'
+                    ).order_by(
+                    'year_t'
+                    )
+                testlist_GDP = []
+                GDP_date = []    
+                for ser_GDP in GDP_data:
+                    testlist_GDP.append(ser_GDP[1])
+                    GDP_date.append(ser_GDP[0])
+                content = {
+                'GDP' : testlist_GDP,
+                'date' : GDP_date
+                }
+            else:
+                GDP_data = GdpStatic.objects.filter(
+                    year_t__regex = (r'^'+GDB_year)
+                    ).order_by(
+                    'year_t'
+                    ).values_list(
+                    'year_t', 'gdp'
+                    )
+                testlist_GDP = []
+                GDP_date = []    
+                for ser_GDP in GDP_data:
+                    testlist_GDP.append(ser_GDP[1])
+                    GDP_date.append(ser_GDP[0])
+                content = {
+                'GDP' : testlist_GDP,
+                'date' : GDP_date
+                }    
+        return Response(content)    
 def month_area_cal(average_list, price_list, country_area_id):
     for month_number in range(12):
         testlist = []

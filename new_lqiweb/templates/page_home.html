@@ -12,8 +12,12 @@
 	<script src="https://code.highcharts.com/modules/export-data.js"></script>
 	<script type = "text/javascript" src ="{% static "js/area_list.js" %}"></script>
 	<script type = "text/javascript" src ="{% static "js/people_list.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/money_supply_list.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/gdb_list.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/post_ajax_data_landdata.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/post_ajax_data_people_static_data.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/post_ajax_data_money_supply.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/post_ajax_data_GDP.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/csrftoken.js" %}"></script>
 	<link href="{% static 'css/lqi_css.css' %}" rel="stylesheet">
 	<title>welcometolqi</title>
@@ -55,7 +59,28 @@
            		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
     		</form>
     	</div>
+    	<div class = 'area_people'>
+    		<span>貨幣供給</span>
+    		<form  name = 'money_supply_form' id = 'money_supply_form' method="post" >
+    		{% csrf_token %}
+				<span>統計年份</span>
+				<select id = "money-supply-time" name = "money-supply-time" ></select>
+				<span>類別</span>
+				<select id = 'money-supply-type' name="money-supply-type"></select>
+           		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
+    		</form>
+    	</div>
+    	<div class = 'area_GDP'>
+    		<span>經濟成長率</span>
+    		<form  name = 'GDP_form' id = 'GDP_form' method="post" >
+    		{% csrf_token %}
+				<span>統計年份</span>
+				<select id = "GDP-time" name = "GDP-time" ></select>
+           		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
+    		</form>
+    	</div>
 	</div>
+
 	<div class = "hichart">
 		<div id = "hichart-main"></div>
 	</div>

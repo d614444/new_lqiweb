@@ -102,4 +102,26 @@ class PeopleStatic(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'People_Static'       
+        db_table = 'People_Static'
+
+class MoneySupply(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    m1b_money = models.IntegerField(db_column='M1B_money', blank=True, null=True)  # Field name made lowercase.
+    m1b_money_rate = models.FloatField(db_column='M1B_money_rate', blank=True, null=True)  # Field name made lowercase.
+    m2_money = models.IntegerField(db_column='M2_money', blank=True, null=True)  # Field name made lowercase.
+    m2_money_rate = models.FloatField(db_column='M2_money_rate', blank=True, null=True)  # Field name made lowercase.
+    days = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'Money_Supply'
+
+class GdpStatic(models.Model):
+    id = models.IntegerField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    year = models.CharField(max_length=45, blank=True, null=True)
+    year_t = models.CharField(max_length=45, blank=True, null=True)
+    gdp = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'GDP_Static'                       

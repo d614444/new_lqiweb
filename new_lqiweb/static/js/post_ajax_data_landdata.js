@@ -17,7 +17,7 @@ $(function(){
 			async : false,
 			type: "POST",
 			datatype : 'json',
-			url : '/testavg/',
+			url : '/landtavg/',
 			data : { 
 				'country' : country,
 				'country_area' : country_area,
@@ -28,15 +28,21 @@ $(function(){
 			success : function(data){
 				var datafinish = []
 				if (country_area == '全部' && year_1 == '全部'){
-					var title = area_form[1]["value"] + "歷年總價平均"
+					var title = area_form[1]["value"] + "歷年月平均總價"
 			 	}else if (country_area == '全部' &&  year_2 == '--'){
 					var title = area_form[1]["value"] + year_1 + "年度月平均總價"
-					console.log("test")
-				}else if ()
+				}else if (country_area == '全部'){
+					var title = year_1 + "-" + year_2 + area_form[1]["value"]  + "年度月平均總價"
+				}else if (year_1 == '全部'){
+					var title = area_form[1]["value"] + country_area + "歷年月平均總價"
+				}else if (year_2 == '--'){
+					var title = area_form[1]["value"] + country_area + year_1 + "年度月平均總價"
+				}else{
+					var title = year_1 + "-" + year_2 + area_form[1]["value"] + country_area + "年度月平均總價"
+				}
 
 				$.ajax({
-
-					url: '/testavg/',
+					url: '/landtavg/',
 					dataType: 'json',
 					success : function(data){
 
@@ -64,7 +70,7 @@ $(function(){
 
 			    		yAxis: {
 			        		title: {
-			            	text: 'Number of Employees'
+			            	text: '總價（萬）'
 			        				}
 			    		},
 			   			legend: {

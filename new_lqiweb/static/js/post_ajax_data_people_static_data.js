@@ -17,23 +17,27 @@ $(function(){
 			async : false,
 			type: "POST",
 			datatype : 'json',
-			url : '/teststatic/',
+			url : '/lqistatic/',
 			data : { 
 				'country' : country,
 				'country_area' : country_area,
 				'year_1' : year_1,
-				'csrfmiddlewaretoken': '{{ csrf_token }}',
 				 },
 			success : function(data){
 				var datafinish = []
 			
 				$.ajax({
 
-					url: '/testavg/',
+					url: '/lqistatic/',
 					dataType: 'json',
 					success : function(data){
 
 						areakey = Object.keys(data)
+						if(country_area=='全部'){
+							var title = year_1 +"年" + area_form[1]["value"] + "人口變化"
+						}else{
+							var title = year_1 +"年" + area_form[1]["value"] + country_area + "人口變化"
+						}
 						for (var i=0; i<areakey.length; i++){
 							/*console.log(areakey[i], data[areakey[i]])*/
 							var dataload = {name:areakey[i], data:data[areakey[i]]};
@@ -44,7 +48,7 @@ $(function(){
 						Highcharts.chart('hichart-main', {
 
 			    		title: {
-			        		text: 'Solar Employment Growth by Sector, 2010-2016'
+			        		text: title
 			    		},
 
 			    		subtitle: {
@@ -59,7 +63,7 @@ $(function(){
 			    			
 
 			        		title: {
-			            	text: 'Number of Employees'
+			            	text: '人數'
 			        				}
 			    		},
 			   			legend: {
@@ -69,13 +73,13 @@ $(function(){
 			    		},
 
 			    		plotOptions: {
-			        		series: {
-			        			colors:'#FF0000',
-			            		label: {
-			                		connectorAllowed: true
-			            				},
+			            	line: {
+           						dataLabels: {
+                				enabled: true
+            							},			
 
-			        				}
+			        				},
+			        			enableMouseTracking: false	
 			   		 	},
 			    		series:datafinish,
 			    		responsive: {

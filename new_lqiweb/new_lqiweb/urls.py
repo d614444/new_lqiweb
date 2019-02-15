@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from webpage.views import testcustomapi,homepage
+from webpage.views import lqicustomapi,homepage
 from rest_framework import routers
 
 #router = routers.SimpleRouter()
@@ -24,7 +24,9 @@ from rest_framework import routers
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', homepage),
-    path('testavg/', testcustomapi.Get_Ajax_Data_landprice, name = 'testcustomapi'),
-    path('teststatic/', testcustomapi.Get_Ajax_Data_peoplestatic, name = 'testcustomapipeoplestatic' )
+    path('landtavg/', lqicustomapi.Get_Ajax_Data_landprice, name = 'lqicustomapi'),
+    path('lqistatic/', lqicustomapi.Get_Ajax_Data_peoplestatic, name = 'lqicustomapipeoplestatic' ),
+    path('lqi_moneysupply/', lqicustomapi.Get_Ajax_Data_money_supply, name = 'lqicustomapimoneysupply'),
+    path('lqi_GDP/', lqicustomapi.Get_Ajax_Data_GDP, name = 'lqicustomapiGDP')
 
 ]
