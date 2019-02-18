@@ -56,6 +56,8 @@
 							</br></br>
 				<span>統計年份</span>
 				<select id = "people-time_1" name = "people-time_1"  ></select>
+				<span>-</span>
+				<select id = "people-time_2" name = "people-time_2"  ></select>
            		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
     		</form>
     	</div>
@@ -63,10 +65,13 @@
     		<span>貨幣供給</span>
     		<form  name = 'money_supply_form' id = 'money_supply_form' method="post" >
     		{% csrf_token %}
-				<span>統計年份</span>
-				<select id = "money-supply-time" name = "money-supply-time" ></select>
 				<span>類別</span>
 				<select id = 'money-supply-type' name="money-supply-type"></select>
+				</br></br>
+				<span>統計年份</span>
+				<select id = "money-supply-time-1" name = "money-supply-time-1" ></select>
+				<span>-</span>
+				<select id = "money-supply-time-2" name = "money-supply-time-2" ></select>
            		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
     		</form>
     	</div>

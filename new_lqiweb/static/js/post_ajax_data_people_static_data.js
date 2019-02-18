@@ -12,6 +12,7 @@ $(function(){
 			var country = country_list[area_form[1]["value"]]
 			var country_area = area_form[2]["value"]
 			var year_1 = area_form[3]["value"]
+			var year_2 = area_form[4]["value"]
 	
 		$.ajax({
 			async : false,
@@ -22,6 +23,7 @@ $(function(){
 				'country' : country,
 				'country_area' : country_area,
 				'year_1' : year_1,
+				'year_2' : year_2
 				 },
 			success : function(data){
 				var datafinish = []
@@ -31,17 +33,35 @@ $(function(){
 					url: '/lqistatic/',
 					dataType: 'json',
 					success : function(data){
-
+						console.log(data['date'])
 						areakey = Object.keys(data)
 						if(country_area=='全部'){
-							var title = year_1 +"年" + area_form[1]["value"] + "人口變化"
+							if(year_1=='全部'){
+								var title = area_form[1]["value"] + "行政區歷年人口變化"
+							}
+							else if (year_2 == '--'){
+								var title = year_1 + '年' +area_form[1]["value"] + '行政區人口變化'
+							}
+							else{
+								var title = year_1 + '-' + year_2 + '年' + area_form[1]["value"] + '行政區人口變化'
+							}
+
 						}else{
-							var title = year_1 +"年" + area_form[1]["value"] + country_area + "人口變化"
+							if(year_1 == '全部'){
+								var title = area_form[1]["value"] + country_area + "歷年人口變化"
+							}
+							else if (year_2 == '--'){
+								var title = year_1 + '年' + area_form[1]["value"] + country_area + '人口變化'
+							}
+							else{
+								var title = year_1 + '-' + year_2 + '年' + area_form[1]["value"] + country_area + '人口變化'
+							}
 						}
 						for (var i=0; i<areakey.length; i++){
-							/*console.log(areakey[i], data[areakey[i]])*/
-							var dataload = {name:areakey[i], data:data[areakey[i]]};
-							datafinish.push(dataload)
+							if (areakey[i] != 'date'){
+								var dataload = {name:areakey[i], data:data[areakey[i]]};
+								datafinish.push(dataload)
+							}
 						}
 						
 
@@ -56,7 +76,7 @@ $(function(){
 			    		},
 
 						xAxis:{
-							categories:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+							categories:data['date']
 						},
 
 			    		yAxis: {

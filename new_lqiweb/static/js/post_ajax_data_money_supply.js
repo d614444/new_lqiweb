@@ -3,8 +3,10 @@ $(function(){
 $('#money_supply_form').submit(function(event) {
 	event.preventDefault();
 	var money_supply_form = $('#money_supply_form').serializeArray()
-	var year = money_supply_form[1]["value"]
-	var money_type = money_supply_form[2]["value"]
+	var year_1 = money_supply_form[2]["value"]
+	var year_2 = money_supply_form[3]["value"]
+	var money_type = money_supply_form[1]["value"]
+	console.log(money_supply_form)
 
 	$.ajax({
 		async : false,
@@ -12,7 +14,8 @@ $('#money_supply_form').submit(function(event) {
 		datatype : 'json',
 		url : '/lqi_moneysupply/',
 		data : { 
-				'year' : year,
+				'year_1' : year_1,
+				'year_2' : year_2,
 				'money_type' : money_type,
 			},
 			success : function(data){
@@ -44,7 +47,7 @@ $('#money_supply_form').submit(function(event) {
 						datafinish.push(datam1b)
 						datafinish.push(datam2)
 						money_key = Object.keys(data)
-						console.log(data)
+						/*console.log(data)*/
 
 					Highcharts.chart('hichart-main', {
 

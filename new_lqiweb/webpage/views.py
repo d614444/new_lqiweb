@@ -11,6 +11,7 @@ from rest_framework import authentication, permissions
 from rest_framework import status
 import numpy as np
 import math
+import re
 
 # Create your views here.
 
@@ -63,7 +64,11 @@ Area_dic = {
 year = ['100', '101', '102',
         '103', '104', '105',
         '106', '107'
-        ]            
+        ]
+year_people_static = [
+        '103', '104', '105',
+        '106', '107'
+        ]                    
 month = [
          '01', '02', '03', 
          '04', '05', '06', 
@@ -215,53 +220,155 @@ class lqicustomapi(APIView):
             country_area = request.POST.get('country_area')
             year_1 = request.POST.get('year_1')
             year_2 = request.POST.get('year_2')
-            print (country)
             global content
             global price_list
             content ={}
-            if (
-            country_area == '全部' 
-            ):
-                average_list = PeopleStatic.objects.filter(
-                        sp00=country
-                        ).filter(sp03__regex = (r'^'+year_1)
+            if (country_area == '全部' ):
+                if (year_1 == '全部'):
+                    average_list = PeopleStatic.objects.filter(
+                                    sp00=country
+                                ).values_list('sp01', 'sp02', 'sp03'
+                                ).order_by(
+                                'sp01' ,'sp03'
+                                )        
+                    for country_area_id in Area_dic[country]:
+                        for year_number in year_people_static:
+                            testlist = []
+                            for check_month in average_list:
+                                if (check_month[2][0:3] == year_number and
+                                    check_month[0] ==country_area_id 
+                                ):
+                                    testlist.append(check_month[1])
+                            a = np.mean(testlist)
+                            a_round = math.ceil(a)
+                            price_list.append(a_round)
+                        content[country_area_id] = price_list
+                        price_list = []
+                    content['date'] = year_people_static
+
+                elif (year_2 == '--'):
+                    average_list = PeopleStatic.objects.filter(
+                        sp00=country,
+                        sp03__regex=(r'^'+year_1)
+                        ).values_list('sp01', 'sp02', 'sp03'
                         ).order_by(
-                        'sp03'
-                        ).values_list('sp01', 'sp02', 'sp03')
-                for country_area_id in Area_dic[country]:
+                        'sp01', 'sp03'
+                        )
+                    for country_area_id in Area_dic[country]:
+                        for month_number in range(12):
+                            testlist = []
+                            for check_month in average_list:
+                                if (check_month[2][3:5]==month[month_number] and
+                                    check_month[0] == country_area_id):
+                                    testlist.append(check_month[1])
+                            a = np.mean(testlist)
+                            a_round = math.ceil(a)
+                            price_list.append(a_round)
+                        content[country_area_id] = price_list
+                        price_list = []
+                    content['date'] = month        
+                            
+                elif (year_2 != '--'):
+                    year_range_1 = year_1[2]
+                    year_range_2 = year_2[2]
+                    regextest = r'^(10[{0}-{1}])'.format(year_range_1,year_range_2)
+                    r = re.compile(regextest)
+                    average_list = PeopleStatic.objects.filter(
+                        sp00=country,
+                        sp03__regex=regextest
+                        ).values_list('sp01', 'sp02', 'sp03'
+                        ).order_by(
+                        'sp01' ,'sp03'
+                        )
+                    use_month_static = list(filter(r.match, year_people_static))
+                    print (use_month_static)
+                    for country_area_id in Area_dic[country]:
+                        testlist = []
+                        for year_number in use_month_static:
+                            for check_month in average_list:
+                                if (check_month[0] ==country_area_id and
+                                    check_month[2][0:3] == year_number):
+                                    testlist.append(check_month[1])
+                            a = np.mean(testlist)
+                            a_round = math.ceil(a)    
+                            price_list.append(a_round)    
+                        content[country_area_id] = price_list
+                        price_list = []
+                    content['date'] = use_month_static                        
+            else:
+                if (year_1 == '全部'):
+                    average_list = PeopleStatic.objects.filter(
+                            sp00=country,
+                            sp01=country_area
+                            ).order_by(
+                            'sp03'
+                            ).values_list('sp01', 'sp02', 'sp03')
+                    for year_number in year_people_static:
                         testlist = []
                         for check_month in average_list:
-                            if (check_month[0] == country_area_id):
-                                    print (check_month[0] ,check_month[2])
-                                    testlist.append(check_month[1])            
-                        content[country_area_id] = testlist
-                        price_list = []
-            else:
-                average_list = PeopleStatic.objects.filter(
-                        sp00=country,
-                        sp01=country_area
-                        ).filter(sp03__regex = (r'^'+year_1)
-                        ).order_by(
-                        'sp03'
-                        ).values_list('sp01', 'sp02', 'sp03')
-                testlist = []
-                for check_month in average_list:
-                    print (check_month[0] ,check_month[1])
-                    testlist.append(check_month[1])            
-                content[country_area] = testlist
-                        #price_list = []
-                print (content)           
+                            if (check_month[2][0:3] == year_number):
+                                testlist.append(check_month[1])
+                        a = np.mean(testlist)
+                        a_round = math.ceil(a)    
+                        price_list.append(a_round)
+                    content[country_area] = price_list
+                    price_list = []
+                    content['date'] = year_people_static
+
+                elif (year_2 == '--'):
+                    average_list = PeopleStatic.objects.filter(
+                            sp00=country,
+                            sp01=country_area,
+                            sp03__regex=(r'^'+year_1)
+                            ).order_by(
+                            'sp03'
+                            ).values_list('sp01', 'sp02', 'sp03')
+                    for check_price in average_list:
+                        price_list.append(check_price[1])
+                    content[country_area] = price_list
+                    price_list = []
+                    content['date'] = month
+
+                elif (year_2 != '--'):
+                    year_range_1 = year_1[2]
+                    year_range_2 = year_2[2]
+                    regextest = r'^(10[{0}-{1}])'.format(year_range_1,year_range_2)
+                    r = re.compile(regextest)
+                    average_list = PeopleStatic.objects.filter(
+                            sp00=country,
+                            sp01=country_area,
+                            sp03__regex=regextest
+                            ).order_by(
+                            'sp03'
+                            ).values_list('sp01', 'sp02', 'sp03')
+                    use_month_static = list(filter(r.match, year_people_static))        
+                    for year_number in use_month_static:
+                        testlist = []
+                        for check_month in average_list:
+                            if (check_month[2][0:3] == year_number):
+                                testlist.append(check_month[1])
+                        a = np.mean(testlist)
+                        a_round = math.ceil(a)    
+                        price_list.append(a_round)
+                    content[country_area] = price_list
+                    price_list = []
+                    content['date'] = use_month_static            
+
             return Response(content)
         return Response(content, status=status.HTTP_200_OK)
 
     @api_view(['GET', 'POST']) 
     def Get_Ajax_Data_money_supply(request, format=None):
         if request.method == 'POST':
-            money_year = request.POST.get('year')
+            money_year_1 = request.POST.get('year_1')
+            money_year_2 = request.POST.get('year_2')
             money_type = request.POST.get('money_type')
+            print (money_year_1, money_year_2, money_type)
             global content
             global price_list
             content ={}
+            #if money_type ==
+            '''
             if (money_type == '金額' and money_year == '全部'):
                 money_supply = MoneySupply.objects.values_list(
                 'm1b_money', 'm2_money', 'days'
@@ -338,7 +445,7 @@ class lqicustomapi(APIView):
                 'm2' : testlist_m2,
                 'date' : money_date
                 }      
-                                   
+            '''                       
         return Response(content)
 
     @api_view(['GET', 'POST'])    

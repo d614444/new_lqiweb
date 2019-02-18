@@ -80,12 +80,13 @@ $(function(){
 			    		},
 
 			    		plotOptions: {
-			        		series: {
-			            		label: {
-			                		connectorAllowed: true
-			            				},
+			            	   line: {
+           						dataLabels: {
+                				enabled: true
+            							},			
 
-			        				}
+			        				},
+			        			enableMouseTracking: false	
 			   		 	},
 			    		series:datafinish,
 			    		responsive: {
