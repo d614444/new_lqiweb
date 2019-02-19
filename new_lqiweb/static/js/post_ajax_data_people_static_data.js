@@ -33,7 +33,7 @@ $(function(){
 					url: '/lqistatic/',
 					dataType: 'json',
 					success : function(data){
-						console.log(data['date'])
+
 						areakey = Object.keys(data)
 						if(country_area=='全部'){
 							if(year_1=='全部'){

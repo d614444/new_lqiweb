@@ -2,25 +2,32 @@ $(function(){
 	$('#GDP_form').submit(function(event) {
 		event.preventDefault();
 		var area_form = $('#GDP_form').serializeArray()
-		var year = area_form[1]["value"]
+		var year_1 = area_form[1]["value"]
+		var year_2 = area_form[2]["value"]
 		$.ajax({
 			async : false,
 			type: "POST",
 			datatype : 'json',
 			url : '/lqi_GDP/',
 			data : {
-				'year' : year
+				'year_1' : year_1,
+				'year_2' : year_2
 			},
 			success : function(data){
 				$.ajax({
 					url : '/lqi_GDP/',
 					datatype : 'json',
 					success : function(data){
-						if(year == '全部'){
-							var title = '歷年GDP變化'
+						if (year_1 == '全部'){
+							var title = '歷年經濟成長率(GDP)YoY'
 						}
-						else{
-							var title = year + '年GDP變化'
+						else if (year_2 == '--')
+						{
+							var title = year_1 + '年經濟成長率(GDP)YoY'
+						}
+						else
+						{
+							var title = year_1 + '-' + year_2 +'年經濟成長率(GDP)YoY'
 						}
 						var datafinish = []
 						var dataGDP = {name:'GDP', data:data['GDP']};

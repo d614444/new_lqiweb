@@ -6,7 +6,7 @@ $('#money_supply_form').submit(function(event) {
 	var year_1 = money_supply_form[2]["value"]
 	var year_2 = money_supply_form[3]["value"]
 	var money_type = money_supply_form[1]["value"]
-	console.log(money_supply_form)
+
 
 	$.ajax({
 		async : false,
@@ -24,24 +24,32 @@ $('#money_supply_form').submit(function(event) {
 					datatype : 'json',
 					success : function(data){
 						var datafinish = []
-						var datam1b = {name:'m1b', data:data['m1b']};
-						var datam2 = {name : 'm2', data:data['m2']}
-						if (money_type == '金額' && year == '全部'){
-							var title = 'M1B與M2歷年金額'
+						var datam1b = {name:'M1B', data:data['M1B']};
+						var datam2 = {name : 'M2', data:data['M2']}
+						if (money_type == '金額' && year_1 == '全部'){
+							var title = '歷年貨幣供給(M1B+M2)金額'
 							var ytitle = '(億)'
 						}
-						else if (money_type == '年增率' && year == '全部'){
-							var title = 'M1B與M2歷年年增率'
+						else if (money_type == '年增率' && year_1 == '全部'){
+							var title = '歷年貨幣供給(M1B+M2)年增率'
 							var ytitle = '%'
 						}
-						else if (money_type == '金額'){
-							var title = year+'年M1B與M2金額'
+						else if (money_type == '金額' && year_2 == '--'){
+							var title = year_1+'年貨幣供給(M1B+M2)金額'
 							var ytitle = '(億)'
 						}
-						else if (money_type == '年增率'){
-							var title = year+'年M1B與M2年增率'
+						else if (money_type == '年增率' && year_2 == '--'){
+							var title = year_1+'年貨幣供給(M1B+M2)年增率'
 							var ytitle = '%'
 						}
+						else if (money_type == '金額' && year_2 != '--'){
+							var title = year_1+ '-' + year_2 +'年貨幣供給(M1B+M2)金額'
+							var ytitle = '(億)'
+						}
+						else if (money_type == '年增率' && year_2 != '--'){
+							var title =year_1+ '-' + year_2 +'年貨幣供給(M1B+M2)年增率'
+							var ytitle = '%'
+						}	
 
 
 						datafinish.push(datam1b)

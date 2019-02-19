@@ -363,99 +363,145 @@ class lqicustomapi(APIView):
             money_year_1 = request.POST.get('year_1')
             money_year_2 = request.POST.get('year_2')
             money_type = request.POST.get('money_type')
-            print (money_year_1, money_year_2, money_type)
             global content
             global price_list
             content ={}
-            #if money_type ==
-            '''
-            if (money_type == '金額' and money_year == '全部'):
-                money_supply = MoneySupply.objects.values_list(
-                'm1b_money', 'm2_money', 'days'
-                ).order_by(
-                'days'
-                )
-                testlist_m1 = []
-                testlist_m2 = []
-                money_date = []
-                for ser_money in money_supply:
-                    testlist_m1.append(ser_money[0])
-                    testlist_m2.append(ser_money[1])
-                    money_date.append(ser_money[2])
-                content = {
-                'm1b' : testlist_m1,
-                'm2' : testlist_m2,
-                'date' : money_date
-                }    
-            elif (money_type == '年增率' and money_year == '全部'):
-                money_supply = MoneySupply.objects.values_list(
-                'm1b_money_rate', 'm2_money_rate', 'days'
-                ).order_by(
-                'days'
-                )
-                testlist_m1 = []
-                testlist_m2 = []
-                money_date = []
-                for ser_money in money_supply:
-                    testlist_m1.append(ser_money[0])
-                    testlist_m2.append(ser_money[1])
-                    money_date.append(ser_money[2])
-                content = {
-                'm1b' : testlist_m1,
-                'm2' : testlist_m2,
-                'date' : money_date
-                }
-            elif (money_type == '金額'):
-                money_supply = MoneySupply.objects.filter(
-                    days__regex = (r'^'+money_year)
+            if (money_type == '金額'):
+                if (money_year_1 == '全部'):
+                    money_supply = MoneySupply.objects.values_list(
+                    'm1b_money', 'm2_money', 'days'
                     ).order_by(
                     'days'
+                    )
+                    testlist_M1B = []
+                    testlist_M2 = []
+                    money_date = []
+                    for ser_money in money_supply:
+                        testlist_M1B.append(ser_money[0])
+                        testlist_M2.append(ser_money[1])
+                        money_date.append(ser_money[2])
+                    content = {
+                    'M1B' : testlist_M1B,
+                    'M2' : testlist_M2,
+                    'date' : money_date
+                    }
+                elif (money_year_2 == '--'):
+                    money_supply = MoneySupply.objects.filter(
+                    days__regex=(r'^'+money_year_1)   
                     ).values_list(
                     'm1b_money', 'm2_money', 'days'
-                    )
-                testlist_m1 = []
-                testlist_m2 = []
-                money_date = []
-                for ser_money in money_supply:
-                    testlist_m1.append(ser_money[0])
-                    testlist_m2.append(ser_money[1])
-                    money_date.append(ser_money[2])
-                content = {
-                'm1b' : testlist_m1,
-                'm2' : testlist_m2,
-                'date' : money_date
-                }
-            elif (money_type == '年增率'):
-                money_supply = MoneySupply.objects.filter(
-                    days__regex = (r'^'+money_year)
                     ).order_by(
                     'days'
+                    )
+                    testlist_M1B = []
+                    testlist_M2 = []
+                    money_date = []
+                    for ser_money in money_supply:
+                        testlist_M1B.append(ser_money[0])
+                        testlist_M2.append(ser_money[1])
+                        money_date.append(ser_money[2])
+                    content = {
+                    'M1B' : testlist_M1B,
+                    'M2' : testlist_M2,
+                    'date' : money_date
+                    }
+                else:
+                    year_range_1 = money_year_1[2]
+                    year_range_2 = money_year_2[2]
+                    regextest = r'^(10[{0}-{1}])'.format(year_range_1, year_range_2)
+                    money_supply = MoneySupply.objects.filter(
+                    days__regex=regextest   
+                    ).values_list(
+                    'm1b_money', 'm2_money', 'days'
+                    ).order_by(
+                    'days'
+                    )
+                    testlist_M1B = []
+                    testlist_M2 = []
+                    money_date = []
+                    for ser_money in money_supply:
+                        testlist_M1B.append(ser_money[0])
+                        testlist_M2.append(ser_money[1])
+                        money_date.append(ser_money[2])
+                    content = {
+                    'M1B' : testlist_M1B,
+                    'M2' : testlist_M2,
+                    'date' : money_date
+                    }
+
+            else:
+                if (money_year_1 == '全部'):
+                    money_supply = MoneySupply.objects.values_list(
+                    'm1b_money_rate', 'm2_money_rate', 'days'
+                    ).order_by(
+                    'days'
+                    )
+                    testlist_M1B = []
+                    testlist_M2 = []
+                    money_date = []
+                    for ser_money in money_supply:
+                        testlist_M1B.append(ser_money[0])
+                        testlist_M2.append(ser_money[1])
+                        money_date.append(ser_money[2])
+                    content = {
+                    'M1B' : testlist_M1B,
+                    'M2' : testlist_M2,
+                    'date' : money_date
+                    }
+                elif (money_year_2 == '--'):
+                    money_supply = MoneySupply.objects.filter(
+                    days__regex=(r'^'+money_year_1)   
                     ).values_list(
                     'm1b_money_rate', 'm2_money_rate', 'days'
+                    ).order_by(
+                    'days'
                     )
-                testlist_m1 = []
-                testlist_m2 = []
-                money_date = []
-                for ser_money in money_supply:
-                    testlist_m1.append(ser_money[0])
-                    testlist_m2.append(ser_money[1])
-                    money_date.append(ser_money[2])
-                content = {
-                'm1b' : testlist_m1,
-                'm2' : testlist_m2,
-                'date' : money_date
-                }      
-            '''                       
+                    testlist_M1B = []
+                    testlist_M2 = []
+                    money_date = []
+                    for ser_money in money_supply:
+                        testlist_M1B.append(ser_money[0])
+                        testlist_M2.append(ser_money[1])
+                        money_date.append(ser_money[2])
+                    content = {
+                    'M1B' : testlist_M1B,
+                    'M2' : testlist_M2,
+                    'date' : money_date
+                    }
+                else:
+                    year_range_1 = money_year_1[2]
+                    year_range_2 = money_year_2[2]
+                    regextest = r'^(10[{0}-{1}])'.format(year_range_1, year_range_2)
+                    money_supply = MoneySupply.objects.filter(
+                    days__regex=regextest   
+                    ).values_list(
+                    'm1b_money_rate', 'm2_money_rate', 'days'
+                    ).order_by(
+                    'days'
+                    )
+                    testlist_M1B = []
+                    testlist_M2 = []
+                    money_date = []
+                    for ser_money in money_supply:
+                        testlist_M1B.append(ser_money[0])
+                        testlist_M2.append(ser_money[1])
+                        money_date.append(ser_money[2])
+                    content = {
+                    'M1B' : testlist_M1B,
+                    'M2' : testlist_M2,
+                    'date' : money_date
+                    }          
         return Response(content)
 
     @api_view(['GET', 'POST'])    
     def  Get_Ajax_Data_GDP(request, format=None):
         if request.method == 'POST':
-            GDB_year = request.POST.get('year')
+            GDP_year_1 = request.POST.get('year_1')
+            GDP_year_2 = request.POST.get('year_2')
             global content
             global price_list
             content ={}
-            if (GDB_year == '全部'):
+            if (GDP_year_1 == '全部'):
                 GDP_data = GdpStatic.objects.values_list(
                     'year_t', 'gdp'
                     ).order_by(
@@ -470,9 +516,9 @@ class lqicustomapi(APIView):
                 'GDP' : testlist_GDP,
                 'date' : GDP_date
                 }
-            else:
+            elif (GDP_year_2 == '--'):
                 GDP_data = GdpStatic.objects.filter(
-                    year_t__regex = (r'^'+GDB_year)
+                    year_t__regex = (r'^'+GDP_year_1)
                     ).order_by(
                     'year_t'
                     ).values_list(
@@ -486,7 +532,27 @@ class lqicustomapi(APIView):
                 content = {
                 'GDP' : testlist_GDP,
                 'date' : GDP_date
-                }    
+                }
+            else:
+                year_range_1 = GDP_year_1[2]
+                year_range_2 = GDP_year_2[2]
+                regextest = r'^(10[{0}-{1}])'.format(year_range_1, year_range_2)
+                GDP_data = GdpStatic.objects.filter(
+                    year_t__regex = regextest
+                    ).order_by(
+                    'year_t'
+                    ).values_list(
+                    'year_t', 'gdp'
+                    )
+                testlist_GDP = []
+                GDP_date = []    
+                for ser_GDP in GDP_data:
+                    testlist_GDP.append(ser_GDP[1])
+                    GDP_date.append(ser_GDP[0])
+                content = {
+                'GDP' : testlist_GDP,
+                'date' : GDP_date
+                }        
         return Response(content)    
 def month_area_cal(average_list, price_list, country_area_id):
     for month_number in range(12):
