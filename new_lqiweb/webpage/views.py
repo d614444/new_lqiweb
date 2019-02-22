@@ -61,9 +61,8 @@ Area_dic = {
             'O' : ['東區','北區','香山區']
 
             }
-year = ['100', '101', '102',
-        '103', '104', '105',
-        '106', '107'
+year = ['102','103', '104', 
+        '105','106', '107'
         ]
 year_people_static = [
         '103', '104', '105',
@@ -86,74 +85,41 @@ class lqicustomapi(APIView):
             year_2 = request.POST.get('year_2')
             global content
             global price_list
+            date_list = []
             content ={}
-            if (
-                country_area == '全部' and 
-                year_1 == '全部'
-                ):
-                    average_list = Pricetable1.objects.filter(
-                            f32=country
-                            ).filter(
-                            Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
-                            ).filter(
-                            pricetable5_f01__f28='N'
-                            ).exclude(
-                            pricetable7_f01__f21a__isnull=True
-                            ).exclude( pricetable7_f01__f21a=0
-                            ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')      
-                    for country_area_id in Area_dic[country]:
-                        month_area_cal(average_list, price_list, country_area_id)
-                        content[country_area_id] = price_list
-                        price_list = []
-            elif (
-                country_area == '全部' and 
-                year_2 == '--'
-                ):
-                    average_list = Pricetable1.objects.filter(
-                        f32=country,
+            if (country_area == '全部'):
+                average_list = Pricetable1.objects.filter(
+                        f32=country
                         ).filter(
                         Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
                         ).filter(
                         pricetable5_f01__f28='N'
-                        ).filter(
-                        pricetable5_f01__f07__regex = (r'^'+year_1)
                         ).exclude(
                         pricetable7_f01__f21a__isnull=True
                         ).exclude( pricetable7_f01__f21a=0
-                        ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
-                    for country_area_id in Area_dic[country]:
-                        month_area_cal(average_list, price_list, country_area_id)
-                        content[country_area_id] = price_list
-                        price_list = []
-            elif (
-                 country_area == '全部'
-                 ):
-                    year_range_1 = year_1[2]
-                    year_range_2 = year_2[2]
-                    regextest = r'^(10[{0}-{1}])'.format(year_range_1,year_range_2)
-                    average_list = Pricetable1.objects.filter(
-                        f32=country,
-                        ).filter(
-                        Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
-                        ).filter(
-                        pricetable5_f01__f28='N'
-                        ).filter(
-                        pricetable5_f01__f07__regex = regextest
-                        ).exclude(
-                        pricetable7_f01__f21a__isnull=True
-                        ).exclude( pricetable7_f01__f21a=0
-                        ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
-                    for country_area_id in Area_dic[country]:
-                        month_area_cal(average_list, price_list, country_area_id)
-                        content[country_area_id] = price_list
-                        price_list = []    
-
+                        ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')      
+                for country_area_id in Area_dic[country]:
+                    date_list = []
+                    for year_r in year:
+                        for month_r in month:
+                            need_date = (year_r + month_r)
+                            date_list.append(need_date)
+                            testlist = []
+                            for check_data in average_list:
+                                if(check_data[0] == country_area_id and
+                                    check_data[2][0:5] == need_date):
+                                    testlist.append(check_data[1])
+                            a = np.mean(testlist)
+                            a_round = round(a,2)
+                            a_round = np.array(a_round)
+                            a_round = np.where(np.isnan(a_round), 0, a_round)
+                            price_list.append(a_round)
+                    content[country_area_id] = price_list
+                    price_list = []
+                content['date'] = date_list
             else:
-                if (
-                    year_1 == '全部'
-                    ):
-                    average_list = Pricetable1.objects.filter(
-                    f32=country, 
+                average_list = Pricetable1.objects.filter(
+                    f32=country,
                     f00=country_area
                     ).filter(
                     Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
@@ -161,55 +127,27 @@ class lqicustomapi(APIView):
                     pricetable5_f01__f28='N'
                     ).exclude(
                     pricetable7_f01__f21a__isnull=True
-                    ).exclude(
-                    pricetable7_f01__f21a=0
-                    ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
-                    month_cal(average_list, price_list)   
-                    content[country_area] = price_list
-                    price_list = []
+                    ).exclude( pricetable7_f01__f21a=0
+                    ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07') 
+                date_list = []
+                for year_r in year:
+                    for month_r in month:
+                        need_date = (year_r + month_r)
+                        date_list.append(need_date)
+                        testlist = []
+                        for check_data in average_list:
+                            if(check_data[2][0:5] == need_date):
+                                testlist.append(check_data[1])
+                        a = np.mean(testlist)
+                        a_round = round(a,2)
+                        a_round = np.array(a_round)
+                        a_round = np.where(np.isnan(a_round), 0, a_round)
+                        price_list.append(a_round)
+                content[country_area] = price_list
+                price_list = []
+                content['date'] = date_list            
 
-                else:
-                    if (
-                        year_2 == '--'
-                        ):
-                            average_list = Pricetable1.objects.filter(
-                            f32=country, 
-                            f00=country_area
-                            ).filter(
-                            Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
-                            ).filter(
-                            pricetable5_f01__f07__regex = (r'^'+year_1)
-                            ).filter(
-                            pricetable5_f01__f28='N'
-                            ).exclude(
-                            pricetable7_f01__f21a__isnull=True
-                            ).exclude(
-                            pricetable7_f01__f21a=0
-                            ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
-                            month_cal(average_list, price_list)
-                            content[country_area] = price_list
-                            price_list = []
-                    else:
-                        year_range_1 = year_1[2]
-                        year_range_2 = year_2[2]
-                        regextest = r'^(10[{0}-{1}])'.format(year_range_1,year_range_2)
-                        average_list = Pricetable1.objects.filter(
-                            f32=country, 
-                            f00=country_area
-                            ).filter(
-                            Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
-                            ).filter(
-                            pricetable5_f01__f07__regex = regextest
-                            ).filter(
-                            pricetable5_f01__f28='N'
-                            ).exclude(
-                            pricetable7_f01__f21a__isnull=True
-                            ).exclude(
-                            pricetable7_f01__f21a=0
-                            ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')
-                        month_cal(average_list, price_list)
-                        content[country_area] = price_list
-                        price_list = []       
+                            
             return Response(content)
         return Response(content, status=status.HTTP_200_OK)
          
@@ -360,212 +298,69 @@ class lqicustomapi(APIView):
     @api_view(['GET', 'POST']) 
     def Get_Ajax_Data_money_supply(request, format=None):
         if request.method == 'POST':
-            money_year_1 = request.POST.get('year_1')
-            money_year_2 = request.POST.get('year_2')
             money_type = request.POST.get('money_type')
             global content
             global price_list
             content ={}
             if (money_type == '金額'):
-                if (money_year_1 == '全部'):
-                    money_supply = MoneySupply.objects.values_list(
-                    'm1b_money', 'm2_money', 'days'
-                    ).order_by(
-                    'days'
-                    )
-                    testlist_M1B = []
-                    testlist_M2 = []
-                    money_date = []
-                    for ser_money in money_supply:
-                        testlist_M1B.append(ser_money[0])
-                        testlist_M2.append(ser_money[1])
-                        money_date.append(ser_money[2])
-                    content = {
-                    'M1B' : testlist_M1B,
-                    'M2' : testlist_M2,
-                    'date' : money_date
-                    }
-                elif (money_year_2 == '--'):
-                    money_supply = MoneySupply.objects.filter(
-                    days__regex=(r'^'+money_year_1)   
-                    ).values_list(
-                    'm1b_money', 'm2_money', 'days'
-                    ).order_by(
-                    'days'
-                    )
-                    testlist_M1B = []
-                    testlist_M2 = []
-                    money_date = []
-                    for ser_money in money_supply:
-                        testlist_M1B.append(ser_money[0])
-                        testlist_M2.append(ser_money[1])
-                        money_date.append(ser_money[2])
-                    content = {
-                    'M1B' : testlist_M1B,
-                    'M2' : testlist_M2,
-                    'date' : money_date
-                    }
-                else:
-                    year_range_1 = money_year_1[2]
-                    year_range_2 = money_year_2[2]
-                    regextest = r'^(10[{0}-{1}])'.format(year_range_1, year_range_2)
-                    money_supply = MoneySupply.objects.filter(
-                    days__regex=regextest   
-                    ).values_list(
-                    'm1b_money', 'm2_money', 'days'
-                    ).order_by(
-                    'days'
-                    )
-                    testlist_M1B = []
-                    testlist_M2 = []
-                    money_date = []
-                    for ser_money in money_supply:
-                        testlist_M1B.append(ser_money[0])
-                        testlist_M2.append(ser_money[1])
-                        money_date.append(ser_money[2])
-                    content = {
-                    'M1B' : testlist_M1B,
-                    'M2' : testlist_M2,
-                    'date' : money_date
-                    }
+                money_supply = MoneySupply.objects.values_list(
+                'm1b_money', 'm2_money', 'days'
+                ).order_by(
+                'days'
+                )
+                testlist_M1B = []
+                testlist_M2 = []
+                money_date = []
+                for ser_money in money_supply:
+                    testlist_M1B.append(ser_money[0])
+                    testlist_M2.append(ser_money[1])
+                    money_date.append(ser_money[2])
+                content = {
+                'M1B' : testlist_M1B,
+                'M2' : testlist_M2,
+                'date' : money_date
+                }
 
             else:
-                if (money_year_1 == '全部'):
-                    money_supply = MoneySupply.objects.values_list(
-                    'm1b_money_rate', 'm2_money_rate', 'days'
-                    ).order_by(
-                    'days'
-                    )
-                    testlist_M1B = []
-                    testlist_M2 = []
-                    money_date = []
-                    for ser_money in money_supply:
-                        testlist_M1B.append(ser_money[0])
-                        testlist_M2.append(ser_money[1])
-                        money_date.append(ser_money[2])
+                money_supply = MoneySupply.objects.values_list(
+                'm1b_money_rate', 'm2_money_rate', 'days'
+                ).order_by(
+                'days'
+                )
+                testlist_M1B = []
+                testlist_M2 = []
+                money_date = []
+                for ser_money in money_supply:
+                    testlist_M1B.append(ser_money[0])
+                    testlist_M2.append(ser_money[1])
+                    money_date.append(ser_money[2])
                     content = {
-                    'M1B' : testlist_M1B,
-                    'M2' : testlist_M2,
-                    'date' : money_date
-                    }
-                elif (money_year_2 == '--'):
-                    money_supply = MoneySupply.objects.filter(
-                    days__regex=(r'^'+money_year_1)   
-                    ).values_list(
-                    'm1b_money_rate', 'm2_money_rate', 'days'
-                    ).order_by(
-                    'days'
-                    )
-                    testlist_M1B = []
-                    testlist_M2 = []
-                    money_date = []
-                    for ser_money in money_supply:
-                        testlist_M1B.append(ser_money[0])
-                        testlist_M2.append(ser_money[1])
-                        money_date.append(ser_money[2])
-                    content = {
-                    'M1B' : testlist_M1B,
-                    'M2' : testlist_M2,
-                    'date' : money_date
-                    }
-                else:
-                    year_range_1 = money_year_1[2]
-                    year_range_2 = money_year_2[2]
-                    regextest = r'^(10[{0}-{1}])'.format(year_range_1, year_range_2)
-                    money_supply = MoneySupply.objects.filter(
-                    days__regex=regextest   
-                    ).values_list(
-                    'm1b_money_rate', 'm2_money_rate', 'days'
-                    ).order_by(
-                    'days'
-                    )
-                    testlist_M1B = []
-                    testlist_M2 = []
-                    money_date = []
-                    for ser_money in money_supply:
-                        testlist_M1B.append(ser_money[0])
-                        testlist_M2.append(ser_money[1])
-                        money_date.append(ser_money[2])
-                    content = {
-                    'M1B' : testlist_M1B,
-                    'M2' : testlist_M2,
-                    'date' : money_date
-                    }          
+                'M1B' : testlist_M1B,
+                'M2' : testlist_M2,
+                'date' : money_date
+                }
         return Response(content)
 
     @api_view(['GET', 'POST'])    
     def  Get_Ajax_Data_GDP(request, format=None):
-        if request.method == 'POST':
-            GDP_year_1 = request.POST.get('year_1')
-            GDP_year_2 = request.POST.get('year_2')
-            global content
-            global price_list
-            content ={}
-            if (GDP_year_1 == '全部'):
-                GDP_data = GdpStatic.objects.values_list(
+        global content
+        global price_list
+        content ={}
+        GDP_data = GdpStatic.objects.values_list(
                     'year_t', 'gdp'
                     ).order_by(
                     'year_t'
                     )
-                testlist_GDP = []
-                GDP_date = []    
-                for ser_GDP in GDP_data:
-                    testlist_GDP.append(ser_GDP[1])
-                    GDP_date.append(ser_GDP[0])
-                content = {
-                'GDP' : testlist_GDP,
-                'date' : GDP_date
+        testlist_GDP = []
+        GDP_date = []    
+        for ser_GDP in GDP_data:
+            testlist_GDP.append(ser_GDP[1])
+            GDP_date.append(ser_GDP[0])
+        content = {
+            'GDP' : testlist_GDP,
+            'date' : GDP_date
                 }
-            elif (GDP_year_2 == '--'):
-                GDP_data = GdpStatic.objects.filter(
-                    year_t__regex = (r'^'+GDP_year_1)
-                    ).order_by(
-                    'year_t'
-                    ).values_list(
-                    'year_t', 'gdp'
-                    )
-                testlist_GDP = []
-                GDP_date = []    
-                for ser_GDP in GDP_data:
-                    testlist_GDP.append(ser_GDP[1])
-                    GDP_date.append(ser_GDP[0])
-                content = {
-                'GDP' : testlist_GDP,
-                'date' : GDP_date
-                }
-            else:
-                year_range_1 = GDP_year_1[2]
-                year_range_2 = GDP_year_2[2]
-                regextest = r'^(10[{0}-{1}])'.format(year_range_1, year_range_2)
-                GDP_data = GdpStatic.objects.filter(
-                    year_t__regex = regextest
-                    ).order_by(
-                    'year_t'
-                    ).values_list(
-                    'year_t', 'gdp'
-                    )
-                testlist_GDP = []
-                GDP_date = []    
-                for ser_GDP in GDP_data:
-                    testlist_GDP.append(ser_GDP[1])
-                    GDP_date.append(ser_GDP[0])
-                content = {
-                'GDP' : testlist_GDP,
-                'date' : GDP_date
-                }        
         return Response(content)    
-def month_area_cal(average_list, price_list, country_area_id):
-    for month_number in range(12):
-        testlist = []
-        for check_month in average_list:
-                if (check_month[2][3:5] == month[month_number] and
-                    check_month[0] == country_area_id):
-                    testlist.append(check_month[1])     
-        a = np.mean(testlist)
-        a_round = round(a,2)
-        a_round = np.array(a_round)
-        a_round = np.where(np.isnan(a_round), 0, a_round)      
-        price_list.append(a_round)
 
 def month_cal(average_list, price_list):
      for month_number in range(12):

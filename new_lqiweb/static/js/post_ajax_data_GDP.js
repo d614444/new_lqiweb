@@ -1,42 +1,42 @@
 $(function(){
 	$('#GDP_form').submit(function(event) {
 		event.preventDefault();
-		var area_form = $('#GDP_form').serializeArray()
-		var year_1 = area_form[1]["value"]
-		var year_2 = area_form[2]["value"]
+
 		$.ajax({
-			async : false,
-			type: "POST",
-			datatype : 'json',
-			url : '/lqi_GDP/',
-			data : {
-				'year_1' : year_1,
-				'year_2' : year_2
-			},
-			success : function(data){
-				$.ajax({
-					url : '/lqi_GDP/',
-					datatype : 'json',
-					success : function(data){
-						if (year_1 == '全部'){
-							var title = '歷年經濟成長率(GDP)YoY'
-						}
-						else if (year_2 == '--')
-						{
-							var title = year_1 + '年經濟成長率(GDP)YoY'
-						}
-						else
-						{
-							var title = year_1 + '-' + year_2 +'年經濟成長率(GDP)YoY'
-						}
+				url : '/lqi_GDP/',
+				datatype : 'json',
+				success : function(data){
+
 						var datafinish = []
 						var dataGDP = {name:'GDP', data:data['GDP']};
 						datafinish.push(dataGDP)
-						console.log(dataGDP)
-											Highcharts.chart('hichart-main', {
+
+						Highcharts.setOptions({
+						lang: {
+							resetZoom: '恢復縮放'
+						},
+						chart: {
+							style: {
+								fontFamily: '微軟正黑體'
+							}
+
+						}
+
+						})	
+						Highcharts.chart('hichart-main', {
+
+						chart: {
+							zoomType: 'xy',
+							resetZoomButton: {
+								position: {
+									x: 0,
+									y: -40
+								},
+							}
+						},						
 
 			    		title: {
-			        		text: title
+			        		text: '經濟成長率(GDP)YoY'
 			    		},
 
 			    		subtitle: {
@@ -86,8 +86,8 @@ $(function(){
 						});
 					}
 			})
-		}
-	})
+		
+
 
 
 	})

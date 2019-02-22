@@ -3,9 +3,8 @@ $(function(){
 $('#money_supply_form').submit(function(event) {
 	event.preventDefault();
 	var money_supply_form = $('#money_supply_form').serializeArray()
-	var year_1 = money_supply_form[2]["value"]
-	var year_2 = money_supply_form[3]["value"]
 	var money_type = money_supply_form[1]["value"]
+	console.log(money_supply_form)
 
 
 	$.ajax({
@@ -14,8 +13,7 @@ $('#money_supply_form').submit(function(event) {
 		datatype : 'json',
 		url : '/lqi_moneysupply/',
 		data : { 
-				'year_1' : year_1,
-				'year_2' : year_2,
+
 				'money_type' : money_type,
 			},
 			success : function(data){
@@ -26,30 +24,14 @@ $('#money_supply_form').submit(function(event) {
 						var datafinish = []
 						var datam1b = {name:'M1B', data:data['M1B']};
 						var datam2 = {name : 'M2', data:data['M2']}
-						if (money_type == '金額' && year_1 == '全部'){
-							var title = '歷年貨幣供給(M1B+M2)金額'
-							var ytitle = '(億)'
+						if (money_type == '金額'){
+							var title = '貨幣供給金額M1B+M2'
+							var ytitle = '（億）' 
 						}
-						else if (money_type == '年增率' && year_1 == '全部'){
-							var title = '歷年貨幣供給(M1B+M2)年增率'
+						else{
+							var title = '貨幣供給年增率M1B+M2'
 							var ytitle = '%'
 						}
-						else if (money_type == '金額' && year_2 == '--'){
-							var title = year_1+'年貨幣供給(M1B+M2)金額'
-							var ytitle = '(億)'
-						}
-						else if (money_type == '年增率' && year_2 == '--'){
-							var title = year_1+'年貨幣供給(M1B+M2)年增率'
-							var ytitle = '%'
-						}
-						else if (money_type == '金額' && year_2 != '--'){
-							var title = year_1+ '-' + year_2 +'年貨幣供給(M1B+M2)金額'
-							var ytitle = '(億)'
-						}
-						else if (money_type == '年增率' && year_2 != '--'){
-							var title =year_1+ '-' + year_2 +'年貨幣供給(M1B+M2)年增率'
-							var ytitle = '%'
-						}	
 
 
 						datafinish.push(datam1b)
@@ -57,10 +39,35 @@ $('#money_supply_form').submit(function(event) {
 						money_key = Object.keys(data)
 						/*console.log(data)*/
 
+					Highcharts.setOptions({
+						lang: {
+							resetZoom: '恢復縮放'
+						},
+						chart: {
+							style: {
+								fontFamily: '微軟正黑體'
+							}
+
+						}
+
+					})	
+
 					Highcharts.chart('hichart-main', {
+						chart: {
+							zoomType: 'xy',
+							resetZoomButton: {
+								position: {
+									x: 0,
+									y: -40
+								},
+							}
+						},
 
 			    		title: {
-			        		text: title
+			        		text: title,
+			        		style: {
+			        			fontFamily: '微軟正黑體'
+			        		}
 			    		},
 
 			    		subtitle: {
@@ -68,6 +75,10 @@ $('#money_supply_form').submit(function(event) {
 			    		},
 
 						xAxis:{
+							crosshair:{
+								enabled:true,
+								width: 3
+							},
 							categories:data['date']
 						},
 
@@ -80,6 +91,11 @@ $('#money_supply_form').submit(function(event) {
 			        		layout: 'vertical',
 			        		align: 'right',
 			        		verticalAlign: 'middle'
+			    		},
+			    		tooltip: {
+			    			shared: true,
+			    			distance: 30,
+			    			padding: 5
 			    		},
 
 			    		plotOptions: {
@@ -96,7 +112,7 @@ $('#money_supply_form').submit(function(event) {
 			    		responsive: {
 			        		rules: [{
 			            		condition: {
-			               			 maxWidth: 500
+			               			 maxWidth: 700
 			           				 		},
 			            		chartOptions: {
 			                		legend: {
