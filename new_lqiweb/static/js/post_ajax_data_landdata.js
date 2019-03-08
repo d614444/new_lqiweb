@@ -44,6 +44,18 @@ $(function(){
 								datafinish.push(dataload)
 							}
 						}
+						Highcharts.setOptions({
+						lang: {
+							resetZoom: '恢復縮放'
+						},
+						chart: {
+							style: {
+								fontFamily: '微軟正黑體'
+							}
+
+						}
+
+						})	
 						
 
 						Highcharts.chart('hichart-main', {

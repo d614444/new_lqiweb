@@ -33,11 +33,9 @@ $('#money_supply_form').submit(function(event) {
 							var ytitle = '%'
 						}
 
-
 						datafinish.push(datam1b)
 						datafinish.push(datam2)
 						money_key = Object.keys(data)
-						/*console.log(data)*/
 
 					Highcharts.setOptions({
 						lang: {
@@ -76,7 +74,7 @@ $('#money_supply_form').submit(function(event) {
 
 						xAxis:{
 							crosshair:{
-								enabled:true,
+								enabled:false,
 								width: 3
 							},
 							categories:data['date']
@@ -93,7 +91,7 @@ $('#money_supply_form').submit(function(event) {
 			        		verticalAlign: 'middle'
 			    		},
 			    		tooltip: {
-			    			shared: true,
+			    			shared: false,
 			    			distance: 30,
 			    			padding: 5
 			    		},

@@ -81,7 +81,7 @@ $(function(){
 
 	for (var i=0; i<country.length; i++){
 
-		$('#country-list')
+		$('#City-input')
 		.append($("<option></option>")
 		    .attr("value",country[i])
 		    .text(country[i]))
@@ -94,17 +94,17 @@ $(function(){
 		    .text(year[i]))
 		}
 
-	$('#country-list').change(function() {
+	$('#City-input').change(function() {
 		index = this.selectedIndex;
-		$('#area-list').empty();
+		$('#Area-input').empty();
 		for (var i = 0; i<areas[index].length; i++){
-			$('#area-list')
+			$('#Area-input')
 			.append($('<option></option>')
 				.attr('value',areas[index][i])
 				.text(areas[index][i]));
 			}
 		});
-		$('#country-list').change();
+		$('#City-input').change();
 
 		$('#price-time_1').change(function(){
 			$('#price-time_2').empty();
@@ -133,4 +133,24 @@ $(function(){
 					}}
 		}}});
 		$('#price-time_1').change();
+
+	for (var i=0; i<country.length; i++){
+
+		$('#muilti-form-country-list')
+		.append($("<option></option>")
+		    .attr("value",country[i])
+		    .text(country[i]))
+		}
+
+	$('#muilti-form-country-list').change(function() {
+		index = this.selectedIndex;
+		$('#muilti-form-area-list').empty();
+		for (var i = 0; i<areas[index].length; i++){
+			$('#muilti-form-area-list')
+			.append($('<option></option>')
+				.attr('value',areas[index][i])
+				.text(areas[index][i]));
+			}
+		});
+		$('#muilti-form-country-list').change();	
 	});

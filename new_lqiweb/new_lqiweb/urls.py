@@ -27,6 +27,6 @@ urlpatterns = [
     path('landtavg/', lqicustomapi.Get_Ajax_Data_landprice, name = 'lqicustomapi'),
     path('lqistatic/', lqicustomapi.Get_Ajax_Data_peoplestatic, name = 'lqicustomapipeoplestatic' ),
     path('lqi_moneysupply/', lqicustomapi.Get_Ajax_Data_money_supply, name = 'lqicustomapimoneysupply'),
-    path('lqi_GDP/', lqicustomapi.Get_Ajax_Data_GDP, name = 'lqicustomapiGDP')
+    path('lqi_multi/', lqicustomapi.Get_Ajax_Data_GDP, name = 'lqicustomapiGDP')
 
 ]

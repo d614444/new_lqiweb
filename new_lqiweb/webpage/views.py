@@ -21,6 +21,12 @@ content ={}
 price_list = []
 testlist = []
 
+country_list = {
+            '臺北市' : "A" , '臺中市' : "B", '基隆市' : "C",
+            '臺南市' : "D" , '高雄市' : "E", '新北市' : "F",
+            '宜蘭縣' : "G" , '桃園市' : "H", '新竹縣' : "J",
+            '新竹市' : "O" ,
+        }
 Area_dic = {
             'A' : ['松山區', '大安區', '大同區', '中正區', '中山區', '萬華區',
                     '信義區', '士林區', '北投區', '內湖區', '南港區', '文山區'],
@@ -154,144 +160,127 @@ class lqicustomapi(APIView):
     @api_view(['GET', 'POST'])
     def Get_Ajax_Data_peoplestatic(request, format=None):
         if request.method == 'POST':
-            country = request.POST.get('country')
-            country_area = request.POST.get('country_area')
-            year_1 = request.POST.get('year_1')
-            year_2 = request.POST.get('year_2')
+            data_list = request.POST.getlist('static_active[]')
+            content_toatal = []
+            date_list = []
+            price_list_total = []
+            price_list_single = []
+            price_list_time = []
+            price_list_totaltrade=[]
             global content
-            global price_list
-            content ={}
-            if (country_area == '全部' ):
-                if (year_1 == '全部'):
-                    average_list = PeopleStatic.objects.filter(
-                                    sp00=country
-                                ).values_list('sp01', 'sp02', 'sp03'
-                                ).order_by(
-                                'sp01' ,'sp03'
-                                )        
-                    for country_area_id in Area_dic[country]:
-                        for year_number in year_people_static:
-                            testlist = []
-                            for check_month in average_list:
-                                if (check_month[2][0:3] == year_number and
-                                    check_month[0] ==country_area_id 
-                                ):
-                                    testlist.append(check_month[1])
-                            a = np.mean(testlist)
-                            a_round = math.ceil(a)
-                            price_list.append(a_round)
-                        content[country_area_id] = price_list
-                        price_list = []
-                    content['date'] = year_people_static
+            global landdata_list
+            country = country_list[data_list[0]]
+            area = data_list[1]
 
-                elif (year_2 == '--'):
-                    average_list = PeopleStatic.objects.filter(
-                        sp00=country,
-                        sp03__regex=(r'^'+year_1)
-                        ).values_list('sp01', 'sp02', 'sp03'
-                        ).order_by(
-                        'sp01', 'sp03'
-                        )
-                    for country_area_id in Area_dic[country]:
-                        for month_number in range(12):
-                            testlist = []
-                            for check_month in average_list:
-                                if (check_month[2][3:5]==month[month_number] and
-                                    check_month[0] == country_area_id):
-                                    testlist.append(check_month[1])
-                            a = np.mean(testlist)
-                            a_round = math.ceil(a)
-                            price_list.append(a_round)
-                        content[country_area_id] = price_list
-                        price_list = []
-                    content['date'] = month        
-                            
-                elif (year_2 != '--'):
-                    year_range_1 = year_1[2]
-                    year_range_2 = year_2[2]
-                    regextest = r'^(10[{0}-{1}])'.format(year_range_1,year_range_2)
-                    r = re.compile(regextest)
-                    average_list = PeopleStatic.objects.filter(
-                        sp00=country,
-                        sp03__regex=regextest
-                        ).values_list('sp01', 'sp02', 'sp03'
-                        ).order_by(
-                        'sp01' ,'sp03'
-                        )
-                    use_month_static = list(filter(r.match, year_people_static))
-                    print (use_month_static)
-                    for country_area_id in Area_dic[country]:
-                        testlist = []
-                        for year_number in use_month_static:
-                            for check_month in average_list:
-                                if (check_month[0] ==country_area_id and
-                                    check_month[2][0:3] == year_number):
-                                    testlist.append(check_month[1])
-                            a = np.mean(testlist)
-                            a_round = math.ceil(a)    
-                            price_list.append(a_round)    
-                        content[country_area_id] = price_list
-                        price_list = []
-                    content['date'] = use_month_static                        
+            if data_list[1] == "全部":
+                landdata_list = call_landdata(country)
+                totalname = data_list[0]+"總價"
+                singlename = data_list[0]+"單價"
+                yearname = data_list[0]+"屋齡"
+                countname = data_list[0]+"交易總量"               
             else:
-                if (year_1 == '全部'):
-                    average_list = PeopleStatic.objects.filter(
-                            sp00=country,
-                            sp01=country_area
-                            ).order_by(
-                            'sp03'
-                            ).values_list('sp01', 'sp02', 'sp03')
-                    for year_number in year_people_static:
-                        testlist = []
-                        for check_month in average_list:
-                            if (check_month[2][0:3] == year_number):
-                                testlist.append(check_month[1])
-                        a = np.mean(testlist)
-                        a_round = math.ceil(a)    
-                        price_list.append(a_round)
-                    content[country_area] = price_list
-                    price_list = []
-                    content['date'] = year_people_static
+                landdata_list = call_landdata_area(country, area)
+                totalname = data_list[0] + area +"總價"
+                singlename = data_list[0] + area +"單價"
+                yearname = data_list[0] + area + "屋齡"     
+                countname = data_list[0]+"交易總量"
+              
+            for year_r in year:
+                for month_r in month:
+                    need_date = year_r+month_r
+                    date_list.append(need_date)
+                    list_totalprice = []
+                    list_singleprice = []
+                    list_yeartime = []
 
-                elif (year_2 == '--'):
-                    average_list = PeopleStatic.objects.filter(
-                            sp00=country,
-                            sp01=country_area,
-                            sp03__regex=(r'^'+year_1)
-                            ).order_by(
-                            'sp03'
-                            ).values_list('sp01', 'sp02', 'sp03')
-                    for check_price in average_list:
-                        price_list.append(check_price[1])
-                    content[country_area] = price_list
-                    price_list = []
-                    content['date'] = month
+                    for check_month in landdata_list:
+                        if (check_month[3][0:5] == need_date):
+                            list_totalprice.append(check_month[1])
+                            list_singleprice.append(check_month[2])
+                            if len(check_month[4]) == 6:
+                                yearplus = "0"+check_month[4]
+                                yeardata = 108 - int(yearplus[0:3])
+                                list_yeartime.append(yeardata)
 
-                elif (year_2 != '--'):
-                    year_range_1 = year_1[2]
-                    year_range_2 = year_2[2]
-                    regextest = r'^(10[{0}-{1}])'.format(year_range_1,year_range_2)
-                    r = re.compile(regextest)
-                    average_list = PeopleStatic.objects.filter(
-                            sp00=country,
-                            sp01=country_area,
-                            sp03__regex=regextest
-                            ).order_by(
-                            'sp03'
-                            ).values_list('sp01', 'sp02', 'sp03')
-                    use_month_static = list(filter(r.match, year_people_static))        
-                    for year_number in use_month_static:
-                        testlist = []
-                        for check_month in average_list:
-                            if (check_month[2][0:3] == year_number):
-                                testlist.append(check_month[1])
-                        a = np.mean(testlist)
-                        a_round = math.ceil(a)    
-                        price_list.append(a_round)
-                    content[country_area] = price_list
-                    price_list = []
-                    content['date'] = use_month_static            
+                            elif len(check_month[4]) == 5:
+                                yearplus = "00"+check_month[4]
+                                yeardata = 108 - int(yearplus[0:3])
+                                list_yeartime.append(yeardata)
 
+                            else:
+                                yeardata = 108 - int(check_month[4][0:3])
+                                list_yeartime.append(yeardata)
+                    
+                    total_mean = np.mean(list_totalprice)
+                    single_mean = np.mean(list_singleprice)
+                    year_mean = np.mean(list_yeartime)
+                    counttrade = len(list_yeartime)
+ 
+
+                    total_mean_round = round(total_mean, 2)
+                    single_mean_round = round(single_mean, 2)
+                    year_mean = round(year_mean, 2)
+
+                    total_mean_round = np.array(total_mean_round)
+                    single_mean_round = np.array(single_mean_round)
+                    year_mean_round =  np.array(year_mean)
+
+                    total_mean_round = np.where(np.isnan(total_mean_round), 0, total_mean_round)
+                    single_mean_round = np.where(np.isnan(single_mean_round), 0, single_mean_round)
+                    year_mean_round =  np.where(np.isnan(year_mean_round), 0, year_mean_round)
+
+                    price_list_total.append(total_mean_round)
+                    price_list_single.append(single_mean_round)
+                    price_list_time.append(year_mean_round)
+                    price_list_totaltrade.append(counttrade)
+    
+            price_total = {
+                    "name": totalname,
+                    "data": price_list_total,
+                    "unit": '萬',
+                    "type": "line",
+                    "valueDecimals": 0
+                        }
+            price_single={
+                    "name": singlename,
+                    "data": price_list_single,
+                    "unit": '萬',
+                    "type": "line",
+                    "valueDecimals": 0
+                        }
+            price_year={
+                    "name": yearname,
+                    "data": price_list_time,
+                    "unit": '年',
+                    "type": "line",
+                    "valueDecimals": 0
+                }
+            price_count={
+                    "name": countname,
+                    "data": price_list_totaltrade,
+                    "unit": '筆',
+                    "type": "line",
+                    "valueDecimals": 0
+                }
+                              
+
+            for data in data_list:
+                if '總價' == data:
+                    content_toatal.append(price_total.copy())
+                elif '單價' == data:
+                    content_toatal.append(price_single.copy())
+                elif '屋齡' == data:
+                    content_toatal.append(price_year.copy())
+                elif '交易總量' == data:
+                    content_toatal.append(price_count.copy())           
+                            
+
+            content={
+                'xData' :date_list,
+                'datasets': content_toatal
+                }
+    
+                        
             return Response(content)
         return Response(content, status=status.HTTP_200_OK)
 
@@ -343,25 +332,108 @@ class lqicustomapi(APIView):
 
     @api_view(['GET', 'POST'])    
     def  Get_Ajax_Data_GDP(request, format=None):
-        global content
-        global price_list
-        content ={}
-        GDP_data = GdpStatic.objects.values_list(
-                    'year_t', 'gdp'
-                    ).order_by(
-                    'year_t'
-                    )
-        testlist_GDP = []
-        GDP_date = []    
-        for ser_GDP in GDP_data:
-            testlist_GDP.append(ser_GDP[1])
-            GDP_date.append(ser_GDP[0])
-        content = {
-            'GDP' : testlist_GDP,
-            'date' : GDP_date
-                }
-        return Response(content)    
+        if request.method == 'POST':
+            multi_country = request.POST.get('country')
+            multi_country_area = request.POST.get('country_area')
+            date_list = []
+            price_list_total = []
+            price_list_single = []
+            global price_list_total
+            global price_list_single
+            global content
+            if (multi_country_area == '全部'):
+                average_list = Pricetable1.objects.filter(
+                        f32=multi_country
+                        ).filter(
+                        Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                        ).filter(
+                        pricetable5_f01__f28='N'
+                        ).exclude(
+                        pricetable7_f01__f21a__isnull=True
+                        ).exclude( pricetable7_f01__f21a=0
+                        ).exclude(pricetable5_f01__f14__isnull=True
+                        ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07', 
+                                        'pricetable7_f01__f22a', 'pricetable5_f01__f14')
+                for year_r in year:
+                    for month_r in month:
+                        need_date = (year_r + month_r)
+                        date_list.append(need_date)
+                        list_totalprice = []
+                        list_singleprice = []
+                        for check_month in average_list:
+                            if (check_month[2][0:5] == need_date):
+                                list_totalprice.append(check_month[1])
+                                list_singleprice.append(check_month[3])
+                           
+                        total_mean = np.mean(list_totalprice)
+                        single_mean = np.mean(list_singleprice)
+                        total_mean_round = round(total_mean, 2)
+                        single_mean_round = round(single_mean, 2)
+                        total_mean_round = np.array(total_mean_round)
+                        single_mean_round = np.array(single_mean_round)
+                        total_mean_round = np.where(np.isnan(total_mean_round), 0, total_mean_round)
+                        single_mean_round = np.where(np.isnan(single_mean_round), 0, single_mean_round)
+                        price_list_total.append(total_mean_round)
+                        price_list_single.append(single_mean_round)
+                print (price_list_total, price_list_single)        
+                                
 
+                content = {
+                'xData' :date_list,
+
+                'datasets':[{
+                "name": '總價',
+                "data": price_list_total,
+                "unit": '萬',
+                "type": "line",
+                "valueDecimals": 0
+                }, {
+                "name": '單價',
+                "data": price_list_single,
+                "unit": '萬',
+                "type": "line",
+                "valueDecimals": 0
+                }]
+                }
+          
+                    
+        return Response(content)
+
+def call_landdata(country):
+    average_list = Pricetable1.objects.filter(
+                   f32=country
+                    ).filter(
+                    Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                    ).filter(
+                    pricetable5_f01__f28='N'
+                    ).exclude(
+                    pricetable7_f01__f21a__isnull=True
+                    ).exclude(pricetable7_f01__f21a=0
+                    ).exclude(pricetable5_f01__f14__isnull=True
+                    ).exclude(pricetable5_f01__f14=''
+                    ).values_list('f00', 'pricetable7_f01__f21a', 
+                                    'pricetable7_f01__f22a', 'pricetable5_f01__f07',
+                                    'pricetable5_f01__f14')
+    return average_list
+
+def call_landdata_area(country, area):
+    average_list = Pricetable1.objects.filter(
+                   f32=country,
+                   f00=area,
+                    ).filter(
+                    Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                    ).filter(
+                    pricetable5_f01__f28='N'
+                    ).exclude(
+                    pricetable7_f01__f21a__isnull=True
+                    ).exclude( pricetable7_f01__f21a=0
+                    ).exclude(pricetable5_f01__f14__isnull=True
+                    ).exclude(pricetable5_f01__f14=''
+                    ).values_list('f00', 'pricetable7_f01__f21a', 
+                                    'pricetable7_f01__f22a', 'pricetable5_f01__f07',
+                                    'pricetable5_f01__f14')                                   
+    return average_list
+                    
 def month_cal(average_list, price_list):
      for month_number in range(12):
         testlist = []

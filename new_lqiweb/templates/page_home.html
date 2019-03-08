@@ -1,5 +1,5 @@
 <!DOCTYPE <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta charset="utf-8">
 	{% load staticfiles %}
@@ -8,6 +8,8 @@
   	src="https://code.jquery.com/jquery-3.3.1.min.js"
   	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   	crossorigin="anonymous"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
   	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
 	<script src="https://code.highcharts.com/modules/export-data.js"></script>
@@ -19,67 +21,133 @@
 	<script type="text/javascript" src="{% static "js/post_ajax_data_people_static_data.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/post_ajax_data_money_supply.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/post_ajax_data_GDP.js" %}"></script>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 	<script type="text/javascript" src="{% static "js/csrftoken.js" %}"></script>
 	<link href="{% static 'css/lqi_css_1.css' %}" rel="stylesheet">
 	<title>welcometolqi</title>
+</head>	
 <body>
-    <div class = "head_bar">
-		<div id = lqi_logo>
-			<img id = lqi_logo_pic src="{% static "images/LQI_logo_1.png" %}">
+	<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<img class ="img-fluid rounded float-left" style="max-width: 4%" src="{% static "images/LQI_logo_1.png" %}" alt="">
+				<a class="navbar-brand col-sm-2 col-md-3 mr-0  navbar-left" href="#">苙寬資訊資料庫</a>
+			</div>
 		</div>
-			<span id = 'title'>歡迎來到苙寬資料庫</span>
-	</div>
-	<div class="list_for_price">
-    	<div class = 'area'>
-    		<span>實價登錄</span>
-    		<form  name = 'area_form' id = 'area_form' method="post" >
-    		{% csrf_token %}
-            	<span>選擇縣市</span>
-            	<select id = "country-list" name = "country-list"  ></select>
-            	<span>選擇區域</span>
-            	<select name="area-list" id="area-list"></select>
-           		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
-    		</form>
-    	</div>
-    	<div class = 'area_people'>
-    		<span>人口統計</span>
-    		<form  name = 'area_people_form' id = 'area_people_form' method="post" >
-    		{% csrf_token %}
-            	<span>選擇縣市</span>
-            	<select id = "country-list-people" name = "country-list-people"  ></select>
-            	<span>選擇區域</span>
-            	<select name="area-list-people" id="area-list-people"></select>
-							</br></br>
-				<span>統計年份</span>
-				<select id = "people-time_1" name = "people-time_1"  ></select>
-				<span>-</span>
-				<select id = "people-time_2" name = "people-time_2"  ></select>
-           		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
-    		</form>
-    	</div>
-    	<div class = 'area_people'>
-    		<span>貨幣供給</span>
-    		<form  name = 'money_supply_form' id = 'money_supply_form' method="post" >
-    		{% csrf_token %}
-				<span>類別</span>
-				<select id = 'money-supply-type' name="money-supply-type"></select>
-           		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
-    		</form>
-    	</div>
-    	<div class = 'area_GDP'>
-    		<span>經濟成長率</span>
-    		<form  name = 'GDP_form' id = 'GDP_form' method="post" >
-    		{% csrf_token %}
-           		<p><input type="submit" value="ok" name = "chart_serach_button"></p>
-    		</form>
-    	</div>
-	</div>
+	</nav>
+	<div class = "container-fluid">
+		<div class="row">
+			<div class="col-sm-2 col-md-2 col-lg-2 ml-0 bg-light d-none d-md-block sidebar">
+				<div class="sidebar-sticky">
+					<form id="static-form">
+						<div class="form-row">
+							<div class="form-group col-md-4">
+								<label for="City-input">請選擇縣市</label>
+								<select id="City-input" class="form-control" name="City-input"></select>
+							</div>
+							<div class="form-group col-md-4">
+								<label for="Area-input">請選擇區域</label>
+								<select id="Area-input" class="form-control" name="Area-input"></select>
+							</div>
+						</div>
+						<div class="dropdown-divider"></div>
+						<h6>實價登錄選項</h6>
+						<div class="form-group">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="總價">
+								<label class="form-check-label" for="inlineRadio1">總價</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="單價">
+								<label class="form-check-label" for="inlineRadio1">單價</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="屋齡">
+								<label class="form-check-label" for="inlineRadio1">屋齡</label>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="交易總量">
+								<label class="form-check-label" for="inlineRadio1">交易總量</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="" value="單價">
+								<label class="form-check-label" for="inlineRadio1">預留</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="" value="屋齡">
+								<label class="form-check-label" for="inlineRadio1">預留</label>
+							</div>
+						</div>
+						<fieldset disabled>
+						<div class="form-group">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="" value="總價">
+								<label class="form-check-label" for="inlineRadio1">預留</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="" value="單價">
+								<label class="form-check-label" for="inlineRadio1">預留</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="" value="屋齡">
+								<label class="form-check-label" for="inlineRadio1">預留</label>
+							</div>
+						</div>
+						</fieldset>
+						<div class="dropdown-divider"></div>
+						<h6>人口資料選項</h6>
+						<div class="form-group">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="人口">
+								<label class="form-check-label" for="inlineRadio1">人口</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="男">
+								<label class="form-check-label" for="inlineRadio1">男</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="女">
+								<label class="form-check-label" for="inlineRadio1">女</label>
+							</div>
+						</div>
+						<div class="dropdown-divider"></div>
+						<h6>政府資料選項</h6>
+						<h7>貨幣供給</h7>
+						<div class="form-group">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="金額">
+								<label class="form-check-label" for="inlineRadio1">金額</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="年增率">
+								<label class="form-check-label" for="inlineRadio1">年增率</label>
+							</div>
+						</div>	
+						<h7>經濟成長率</h7>	
+						<div class="form-group">
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name="static_active[]" value="GDP">
+								<label class="form-check-label" for="inlineRadio1">GDP</label>
+							</div>
+						</div>	
+						<button id="submit-button" type="submit" class="btn btn-primary fixed-bottom mb-2 ml-2">Submit</button>		
+					</form>
 
-	<div class = "hichart_area">
-		<div id = "hichart-main"></div>
-	</div>
-	<script >
+				</div>
+			</div>
+			<main class="col-md-9 ml-sm-auto col-lg-10">
+				<div class="d-flex justify-content-between flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+					<h1 class="h2">分析表格</h1>
+				</div>	
+				<div class="highchart-main" id="container" >
+				</div>
+			
+			</main>		
 
-	</script>		
+
+		</div>
+	</div>	
 </body>
 </html>
