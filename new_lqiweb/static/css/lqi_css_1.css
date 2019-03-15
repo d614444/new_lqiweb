@@ -7,7 +7,8 @@ body{
 	left: 0;
 	z-index: 100;
 	padding: 0;
-	box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1)
+	box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+	
 }
 
 .sidebar-sticky{
@@ -38,5 +39,60 @@ body{
 	background-color:  #21212933;
 	border-color: #21212933
 }
+.menu-bar{
+	position: sticky;
+	top: 48px;
+	height: calc(100vh - 48px);
+	padding-top: 1rem;
+	padding-left: 1.2rem;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
 
-  
+
+
+#button-landstatic-1{
+	background-color: rgba(0, 0, 0, 0.3);
+	border-color: rgba(0, 0, 0, 0.3);
+	border-radius: 20%;
+	
+}
+#button-landstatic-2{
+	background-image: url('/static/images/204-000購買能力.png');
+	background-repeat: no-repeat;
+	background-color: rgba(0, 0, 0, 0.3);
+	border-color: rgba(0, 0, 0, 0.3);
+	width: 33px;
+	height: 33px ;
+	
+}
+.sidebar-options{
+	
+	color: black; text-shadow: rgba(0, 0, 0, 0.3) 0.1em 0.1em 0.2em;
+	text-decoration: none;
+	
+}
+.sidebar-options-text{
+	padding-left: 14px;
+}
+.delete-button{
+	background-image: url('/static/images/x-button .png');
+	background-repeat: no-repeat;
+	background-color: rgba(0, 0, 0, 0);
+	border-color: rgba(0, 0, 0, 0);
+	width: 24px;
+	height: 25px ;
+}
+.sidebar-options:focus, .sidebar-options:hover {
+
+    text-decoration: none;
+
+}
+#landstatic{
+	
+	height: 34vh;
+}
+.tooltip.in {
+  opacity: 3;
+  font-family: "Arial"
+}

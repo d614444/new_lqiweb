@@ -1,10 +1,13 @@
 $(function(){
-		
+	
 
 		$('#static-form').submit(function(event) {
 			event.preventDefault();
+			var min = $('#total-price').data('slider');
+			console.log(min)
 			var data_add ={ 'static_active[]' : [] }
 			$(":checked").each(function(){
+			
 				data_add['static_active[]'].push($(this).val());
 			});
 			console.log(data_add)
@@ -192,4 +195,12 @@ $.ajax({
 });
 
 	});
+
+
+
+
+
+
+
 });
+

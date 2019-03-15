@@ -17,9 +17,6 @@ import re
 
 #filter(pricetable5_f01__f07__regex = r'^102'
 
-content ={}
-price_list = []
-testlist = []
 
 country_list = {
             '臺北市' : "A" , '臺中市' : "B", '基隆市' : "C",
@@ -83,84 +80,10 @@ month = [
 
 class lqicustomapi(APIView):
     @api_view(['GET', 'POST'])
-    def Get_Ajax_Data_landprice(request, format=None):
-        if request.method == 'POST':   
-            country = request.POST.get('country')
-            country_area = request.POST.get('country_area')
-            year_1 = request.POST.get('year_1')
-            year_2 = request.POST.get('year_2')
-            global content
-            global price_list
-            date_list = []
-            content ={}
-            if (country_area == '全部'):
-                average_list = Pricetable1.objects.filter(
-                        f32=country
-                        ).filter(
-                        Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
-                        ).filter(
-                        pricetable5_f01__f28='N'
-                        ).exclude(
-                        pricetable7_f01__f21a__isnull=True
-                        ).exclude( pricetable7_f01__f21a=0
-                        ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07')      
-                for country_area_id in Area_dic[country]:
-                    date_list = []
-                    for year_r in year:
-                        for month_r in month:
-                            need_date = (year_r + month_r)
-                            date_list.append(need_date)
-                            testlist = []
-                            for check_data in average_list:
-                                if(check_data[0] == country_area_id and
-                                    check_data[2][0:5] == need_date):
-                                    testlist.append(check_data[1])
-                            a = np.mean(testlist)
-                            a_round = round(a,2)
-                            a_round = np.array(a_round)
-                            a_round = np.where(np.isnan(a_round), 0, a_round)
-                            price_list.append(a_round)
-                    content[country_area_id] = price_list
-                    price_list = []
-                content['date'] = date_list
-            else:
-                average_list = Pricetable1.objects.filter(
-                    f32=country,
-                    f00=country_area
-                    ).filter(
-                    Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
-                    ).filter(
-                    pricetable5_f01__f28='N'
-                    ).exclude(
-                    pricetable7_f01__f21a__isnull=True
-                    ).exclude( pricetable7_f01__f21a=0
-                    ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07') 
-                date_list = []
-                for year_r in year:
-                    for month_r in month:
-                        need_date = (year_r + month_r)
-                        date_list.append(need_date)
-                        testlist = []
-                        for check_data in average_list:
-                            if(check_data[2][0:5] == need_date):
-                                testlist.append(check_data[1])
-                        a = np.mean(testlist)
-                        a_round = round(a,2)
-                        a_round = np.array(a_round)
-                        a_round = np.where(np.isnan(a_round), 0, a_round)
-                        price_list.append(a_round)
-                content[country_area] = price_list
-                price_list = []
-                content['date'] = date_list            
-
-                            
-            return Response(content)
-        return Response(content, status=status.HTTP_200_OK)
-         
-    @api_view(['GET', 'POST'])
     def Get_Ajax_Data_peoplestatic(request, format=None):
         if request.method == 'POST':
             data_list = request.POST.getlist('static_active[]')
+            content = {}
             content_toatal = []
             date_list = []
             price_list_total = []
@@ -168,7 +91,6 @@ class lqicustomapi(APIView):
             price_list_time = []
             price_list_totaltrade=[]
             global content
-            global landdata_list
             country = country_list[data_list[0]]
             area = data_list[1]
 
@@ -192,7 +114,6 @@ class lqicustomapi(APIView):
                     list_totalprice = []
                     list_singleprice = []
                     list_yeartime = []
-
                     for check_month in landdata_list:
                         if (check_month[3][0:5] == need_date):
                             list_totalprice.append(check_month[1])
@@ -210,25 +131,11 @@ class lqicustomapi(APIView):
                             else:
                                 yeardata = 108 - int(check_month[4][0:3])
                                 list_yeartime.append(yeardata)
-                    
-                    total_mean = np.mean(list_totalprice)
-                    single_mean = np.mean(list_singleprice)
-                    year_mean = np.mean(list_yeartime)
+
+                    total_mean_round = fix_mean(list_totalprice)
+                    single_mean_round = fix_mean(list_singleprice)
+                    year_mean_round = fix_mean(list_yeartime)
                     counttrade = len(list_yeartime)
- 
-
-                    total_mean_round = round(total_mean, 2)
-                    single_mean_round = round(single_mean, 2)
-                    year_mean = round(year_mean, 2)
-
-                    total_mean_round = np.array(total_mean_round)
-                    single_mean_round = np.array(single_mean_round)
-                    year_mean_round =  np.array(year_mean)
-
-                    total_mean_round = np.where(np.isnan(total_mean_round), 0, total_mean_round)
-                    single_mean_round = np.where(np.isnan(single_mean_round), 0, single_mean_round)
-                    year_mean_round =  np.where(np.isnan(year_mean_round), 0, year_mean_round)
-
                     price_list_total.append(total_mean_round)
                     price_list_single.append(single_mean_round)
                     price_list_time.append(year_mean_round)
@@ -263,7 +170,6 @@ class lqicustomapi(APIView):
                     "valueDecimals": 0
                 }
                               
-
             for data in data_list:
                 if '總價' == data:
                     content_toatal.append(price_total.copy())
@@ -273,131 +179,12 @@ class lqicustomapi(APIView):
                     content_toatal.append(price_year.copy())
                 elif '交易總量' == data:
                     content_toatal.append(price_count.copy())           
-                            
-
             content={
                 'xData' :date_list,
                 'datasets': content_toatal
-                }
-    
-                        
+                }       
             return Response(content)
         return Response(content, status=status.HTTP_200_OK)
-
-    @api_view(['GET', 'POST']) 
-    def Get_Ajax_Data_money_supply(request, format=None):
-        if request.method == 'POST':
-            money_type = request.POST.get('money_type')
-            global content
-            global price_list
-            content ={}
-            if (money_type == '金額'):
-                money_supply = MoneySupply.objects.values_list(
-                'm1b_money', 'm2_money', 'days'
-                ).order_by(
-                'days'
-                )
-                testlist_M1B = []
-                testlist_M2 = []
-                money_date = []
-                for ser_money in money_supply:
-                    testlist_M1B.append(ser_money[0])
-                    testlist_M2.append(ser_money[1])
-                    money_date.append(ser_money[2])
-                content = {
-                'M1B' : testlist_M1B,
-                'M2' : testlist_M2,
-                'date' : money_date
-                }
-
-            else:
-                money_supply = MoneySupply.objects.values_list(
-                'm1b_money_rate', 'm2_money_rate', 'days'
-                ).order_by(
-                'days'
-                )
-                testlist_M1B = []
-                testlist_M2 = []
-                money_date = []
-                for ser_money in money_supply:
-                    testlist_M1B.append(ser_money[0])
-                    testlist_M2.append(ser_money[1])
-                    money_date.append(ser_money[2])
-                    content = {
-                'M1B' : testlist_M1B,
-                'M2' : testlist_M2,
-                'date' : money_date
-                }
-        return Response(content)
-
-    @api_view(['GET', 'POST'])    
-    def  Get_Ajax_Data_GDP(request, format=None):
-        if request.method == 'POST':
-            multi_country = request.POST.get('country')
-            multi_country_area = request.POST.get('country_area')
-            date_list = []
-            price_list_total = []
-            price_list_single = []
-            global price_list_total
-            global price_list_single
-            global content
-            if (multi_country_area == '全部'):
-                average_list = Pricetable1.objects.filter(
-                        f32=multi_country
-                        ).filter(
-                        Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
-                        ).filter(
-                        pricetable5_f01__f28='N'
-                        ).exclude(
-                        pricetable7_f01__f21a__isnull=True
-                        ).exclude( pricetable7_f01__f21a=0
-                        ).exclude(pricetable5_f01__f14__isnull=True
-                        ).values_list('f00', 'pricetable7_f01__f21a', 'pricetable5_f01__f07', 
-                                        'pricetable7_f01__f22a', 'pricetable5_f01__f14')
-                for year_r in year:
-                    for month_r in month:
-                        need_date = (year_r + month_r)
-                        date_list.append(need_date)
-                        list_totalprice = []
-                        list_singleprice = []
-                        for check_month in average_list:
-                            if (check_month[2][0:5] == need_date):
-                                list_totalprice.append(check_month[1])
-                                list_singleprice.append(check_month[3])
-                           
-                        total_mean = np.mean(list_totalprice)
-                        single_mean = np.mean(list_singleprice)
-                        total_mean_round = round(total_mean, 2)
-                        single_mean_round = round(single_mean, 2)
-                        total_mean_round = np.array(total_mean_round)
-                        single_mean_round = np.array(single_mean_round)
-                        total_mean_round = np.where(np.isnan(total_mean_round), 0, total_mean_round)
-                        single_mean_round = np.where(np.isnan(single_mean_round), 0, single_mean_round)
-                        price_list_total.append(total_mean_round)
-                        price_list_single.append(single_mean_round)
-                print (price_list_total, price_list_single)        
-                                
-
-                content = {
-                'xData' :date_list,
-
-                'datasets':[{
-                "name": '總價',
-                "data": price_list_total,
-                "unit": '萬',
-                "type": "line",
-                "valueDecimals": 0
-                }, {
-                "name": '單價',
-                "data": price_list_single,
-                "unit": '萬',
-                "type": "line",
-                "valueDecimals": 0
-                }]
-                }
-          
-                    
-        return Response(content)
 
 def call_landdata(country):
     average_list = Pricetable1.objects.filter(
@@ -433,6 +220,13 @@ def call_landdata_area(country, area):
                                     'pricetable7_f01__f22a', 'pricetable5_f01__f07',
                                     'pricetable5_f01__f14')                                   
     return average_list
+
+def fix_mean(list_totalprice):
+    total_mean = np.mean(list_totalprice)
+    total_mean_round = round(total_mean, 2)
+    total_mean_round = np.where(np.isnan(total_mean_round), 0, total_mean_round)
+
+    return total_mean_round    
                     
 def month_cal(average_list, price_list):
      for month_number in range(12):
@@ -447,6 +241,5 @@ def month_cal(average_list, price_list):
         price_list.append(a_round)        
           
 def homepage(request):
-
     return render(request, 'page_home.html')
 

@@ -4,24 +4,24 @@
 	<meta charset="utf-8">
 	{% load staticfiles %}
 	<meta name="viewport" content="width=device-width, intial-scale=1.0">
-	<script
-  	src="https://code.jquery.com/jquery-3.3.1.min.js"
-  	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-  	crossorigin="anonymous"></script>
-  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+	
+	<script type = "text/javascript" src ="{% static "script/jQuery3.3.1.js" %}"></script>
+	<script type = "text/javascript" src ="{% static "script/bootstrap.js" %}"></script>
+	<link href="{% static 'script/bootstrap.css' %}" rel="stylesheet">
+	<script type = "text/javascript" src ="{% static "script/bootstrap-slider.js" %}"></script>
+	<link href="{% static 'script/bootstrap-slider.css' %}" rel="stylesheet">
+
   	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
 	<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
 	<script type = "text/javascript" src ="{% static "js/area_list.js" %}"></script>
-	<script type = "text/javascript" src ="{% static "js/people_list.js" %}"></script>
-	<script type="text/javascript" src="{% static "js/money_supply_list.js" %}"></script>
-	<script type="text/javascript" src="{% static "js/gdp_list.js" %}"></script>
-	<script type="text/javascript" src="{% static "js/post_ajax_data_landdata.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/post_ajax_data_people_static_data.js" %}"></script>
-	<script type="text/javascript" src="{% static "js/post_ajax_data_money_supply.js" %}"></script>
-	<script type="text/javascript" src="{% static "js/post_ajax_data_GDP.js" %}"></script>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+	<script type="text/javascript" src="{% static "js/button-control.js" %}"></script>
+
+
 	<script type="text/javascript" src="{% static "js/csrftoken.js" %}"></script>
 	<link href="{% static 'css/lqi_css_1.css' %}" rel="stylesheet">
 	<title>welcometolqi</title>
@@ -37,117 +37,91 @@
 	</nav>
 	<div class = "container-fluid">
 		<div class="row">
-			<div class="col-sm-2 col-md-2 col-lg-2 ml-0 bg-light d-none d-md-block sidebar">
+			<div class="col-sm-2 col-md-2 col-lg-2 ml-0  d-none d-md-block sidebar">
 				<div class="sidebar-sticky">
 					<form id="static-form">
 						<div class="form-row">
-							<div class="form-group col-md-4">
+							<div class="form-group col-md-5">
 								<label for="City-input">請選擇縣市</label>
 								<select id="City-input" class="form-control" name="City-input"></select>
 							</div>
-							<div class="form-group col-md-4">
+							<div class="form-group col-md-5">
 								<label for="Area-input">請選擇區域</label>
 								<select id="Area-input" class="form-control" name="Area-input"></select>
 							</div>
-						</div>
-						<div class="dropdown-divider"></div>
-						<h6>實價登錄選項</h6>
-						<div class="form-group">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="總價">
-								<label class="form-check-label" for="inlineRadio1">總價</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="單價">
-								<label class="form-check-label" for="inlineRadio1">單價</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="屋齡">
-								<label class="form-check-label" for="inlineRadio1">屋齡</label>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="交易總量">
-								<label class="form-check-label" for="inlineRadio1">交易總量</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="" value="單價">
-								<label class="form-check-label" for="inlineRadio1">預留</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="" value="屋齡">
-								<label class="form-check-label" for="inlineRadio1">預留</label>
-							</div>
-						</div>
-						<fieldset disabled>
-						<div class="form-group">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="" value="總價">
-								<label class="form-check-label" for="inlineRadio1">預留</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="" value="單價">
-								<label class="form-check-label" for="inlineRadio1">預留</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="" value="屋齡">
-								<label class="form-check-label" for="inlineRadio1">預留</label>
-							</div>
-						</div>
-						</fieldset>
-						<div class="dropdown-divider"></div>
-						<h6>人口資料選項</h6>
-						<div class="form-group">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="人口">
-								<label class="form-check-label" for="inlineRadio1">人口</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="男">
-								<label class="form-check-label" for="inlineRadio1">男</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="女">
-								<label class="form-check-label" for="inlineRadio1">女</label>
-							</div>
-						</div>
-						<div class="dropdown-divider"></div>
-						<h6>政府資料選項</h6>
-						<h7>貨幣供給</h7>
-						<div class="form-group">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="金額">
-								<label class="form-check-label" for="inlineRadio1">金額</label>
-							</div>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="年增率">
-								<label class="form-check-label" for="inlineRadio1">年增率</label>
-							</div>
 						</div>	
-						<h7>經濟成長率</h7>	
-						<div class="form-group">
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name="static_active[]" value="GDP">
-								<label class="form-check-label" for="inlineRadio1">GDP</label>
+						<div class="row">
+							<div class="col-9">
+								<a href=#collapseExample1 class=" sidebar-options" data-toggle="collapse"role="button" aria-expanded="false" aria-controls="collapseExample">
+									<img src="/static/images/201-000實價資料.png" id="button-landstatic-1"alt="">
+									<span class="sidebar-options-text">實價登錄選項</span>
+								</a>
+							</div>	
+							<div class="col-2">
+								<button type="button" class="btn btn-primary  delete-button" ></button>
+							</div>		
+						</div>
+						<div class="collapse" id="collapseExample1">
+							<div class="card card-body" id="landstatic">
+								<div class="form-group">
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="checkbox" name="static_active[]" value="總價">
+										<label class="form-check-label" for="inlineRadio1">總價</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="checkbox" name="static_active[]" value="單價">
+										<label class="form-check-label" for="inlineRadio1">單價</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="checkbox" name="static_active[]" value="屋齡">
+										<label class="form-check-label" for="inlineRadio1">屋齡</label>
+									</div>
+								</div>	
+								<div class="form-group">
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="checkbox" name="static_active[]" value="交易總量">
+										<label class="form-check-label" for="inlineRadio1">交易總量</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="checkbox" name="" value="單價">
+										<label class="form-check-label" for="inlineRadio1">預留</label>
+									</div>
+									<div class="form-check form-check-inline">
+										<input class="form-check-input" type="checkbox" name="" value="屋齡">
+										<label class="form-check-label" for="inlineRadio1">預留</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="form-check form-check-inline">
+										<input id="total-price-enabled" type="checkbox"/>總價區間
+									</div>
+									<div class="form-check form-check-inline">
+										<input id="total-price"  name="static_active[]"type="text" class="form-check-input" value="" data-slider-min="100" data-slider-max="20000" data-slider-step="500" data-slider-value="[100,20000] " data-slider-enabled="false"/>
+									</div> 
+								</div>
+								<div class="form-group">
+									<div class="form-check form-check-inline">
+										<input id="single-price-enabled" type="checkbox"/>單價區間
+									</div>
+									<div class="form-check form-check-inline">
+										<input id="single-price"  name="static_active[]"type="text" class="form-check-input" value="" data-slider-min="20" data-slider-max="300" data-slider-step="10" data-slider-value="[20,300]" data-slider-enabled="false"/>
+									</div> 
+								</div>		
 							</div>
-						</div>	
-						<button id="submit-button" type="submit" class="btn btn-primary fixed-bottom mb-2 ml-2">Submit</button>		
-					</form>
-
+						</div>
+						<button id="submit-button" type="submit" class="btn btn-primary fixed-bottom mb-2 ml-2">Submit</button>	
+					</form>	
 				</div>
 			</div>
-			<main class="col-md-9 ml-sm-auto col-lg-10">
+			<main class="col-md-9 ml-sm-auto col-lg-10" id="main-window">
 				<div class="d-flex justify-content-between flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
 					<h1 class="h2">分析表格</h1>
 				</div>	
 				<div class="highchart-main" id="container" >
 				</div>
-			
 			</main>		
-
-
 		</div>
-	</div>	
+	</div>
+
 </body>
 </html>
