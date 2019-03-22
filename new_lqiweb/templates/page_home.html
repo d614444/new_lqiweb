@@ -35,93 +35,121 @@
 			</div>
 		</div>
 	</nav>
-	<div class = "container-fluid">
-		<div class="row">
-			<div class="col-sm-2 col-md-2 col-lg-2 ml-0  d-none d-md-block sidebar">
-				<div class="sidebar-sticky">
-					<form id="static-form">
-						<div class="form-row">
-							<div class="form-group col-md-5">
-								<label for="City-input">請選擇縣市</label>
-								<select id="City-input" class="form-control" name="City-input"></select>
-							</div>
-							<div class="form-group col-md-5">
-								<label for="Area-input">請選擇區域</label>
-								<select id="Area-input" class="form-control" name="Area-input"></select>
-							</div>
-						</div>	
-						<div class="row">
-							<div class="col-9">
-								<a href=#collapseExample1 class=" sidebar-options" data-toggle="collapse"role="button" aria-expanded="false" aria-controls="collapseExample">
-									<img src="/static/images/201-000實價資料.png" id="button-landstatic-1"alt="">
-									<span class="sidebar-options-text">實價登錄選項</span>
-								</a>
-							</div>	
-							<div class="col-2">
-								<button type="button" class="btn btn-primary  delete-button" ></button>
-							</div>		
+	<div class="wrapper d-flex" id='wrapper'>
+		<div class='sidebar' id='sidebar'>
+			<div class="button-option">
+				<div class="static-button" >
+					<button type="button" class="btn btn-primary static-button-option" id='static-icon-1'></button>
+				</div>
+				<div class="static-button">
+					<button type="button" class="btn btn-primary static-button-option" id='static-icon-2'></button>
+				</div>
+				<div class="static-button">
+					<button type="button">test</button>
+				</div>
+				<div class="static-button">
+					<button type="button">test</button>
+				</div>		
+			</div>	
+		</div>
+		<form id="static-form">
+			<div class="controlls">
+				<div class='sidebar-menu' id='sidebar-menu'>
+					<div class="form-row" >
+						<div class="form-group col-md-6">
+							<label for="City-input" >請選擇縣市</label>
+							<select id="City-input" class="form-control" name="City-input"></select>
 						</div>
-						<div class="collapse" id="collapseExample1">
-							<div class="card card-body" id="landstatic">
-								<div class="form-group">
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="checkbox" name="static_active[]" value="總價">
-										<label class="form-check-label" for="inlineRadio1">總價</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="checkbox" name="static_active[]" value="單價">
-										<label class="form-check-label" for="inlineRadio1">單價</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="checkbox" name="static_active[]" value="屋齡">
-										<label class="form-check-label" for="inlineRadio1">屋齡</label>
-									</div>
-								</div>	
-								<div class="form-group">
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="checkbox" name="static_active[]" value="交易總量">
-										<label class="form-check-label" for="inlineRadio1">交易總量</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="checkbox" name="" value="單價">
-										<label class="form-check-label" for="inlineRadio1">預留</label>
-									</div>
-									<div class="form-check form-check-inline">
-										<input class="form-check-input" type="checkbox" name="" value="屋齡">
-										<label class="form-check-label" for="inlineRadio1">預留</label>
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="form-check form-check-inline">
-										<input id="total-price-enabled" type="checkbox"/>總價區間
-									</div>
-									<div class="form-check form-check-inline">
-										<input id="total-price"  name="static_active[]"type="text" class="form-check-input" value="" data-slider-min="100" data-slider-max="20000" data-slider-step="500" data-slider-value="[100,20000] " data-slider-enabled="false"/>
-									</div> 
-								</div>
-								<div class="form-group">
-									<div class="form-check form-check-inline">
-										<input id="single-price-enabled" type="checkbox"/>單價區間
-									</div>
-									<div class="form-check form-check-inline">
-										<input id="single-price"  name="static_active[]"type="text" class="form-check-input" value="" data-slider-min="20" data-slider-max="300" data-slider-step="10" data-slider-value="[20,300]" data-slider-enabled="false"/>
-									</div> 
-								</div>		
-							</div>
+						<div class="form-group col-md-6">
+							<label for="Area-input" >請選擇區域</label>
+							<select id="Area-input" class="form-control" name="Area-input"></select>
 						</div>
-						<button id="submit-button" type="submit" class="btn btn-primary fixed-bottom mb-2 ml-2">Submit</button>	
-					</form>	
+					</div>
+					<div class="dropdown-divider"></div>
+					<div class="form-group">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="static_active[]" value="總價">
+							<label class="form-check-label" for="inlineRadio1">總價</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="static_active[]" value="單價">
+							<label class="form-check-label" for="inlineRadio1">單價</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="static_active[]" value="屋齡">
+							<label class="form-check-label" for="inlineRadio1">屋齡</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="static_active[]" value="交易總量">
+							<label class="form-check-label" for="inlineRadio1">交易總量</label>
+							</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="" value="單價">
+							<label class="form-check-label" for="inlineRadio1">預留</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="" value="屋齡">
+							<label class="form-check-label" for="inlineRadio1">預留</label>
+						</div>
+					</div>
+					<button id="submit-button" type="submit" class="btn btn-primary bottom mb-2 ml-2">Submit</button>	
+				</div>
+				<div class='sidebar-menu-2' id='sidebar-menu-2'>
+					<div class="form-row" >
+						<div class="form-group col-md-6">
+							<label for="City-input" >請選擇縣市</label>
+							<select id="City-input" class="form-control" name="City-input"></select>
+						</div>
+						<div class="form-group col-md-6">
+							<label for="Area-input" >請選擇區域</label>
+							<select id="Area-input" class="form-control" name="Area-input"></select>
+						</div>
+					</div>
+					<div class="dropdown-divider"></div>
+					<div class="form-group">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="static_active[]" value="總價">
+							<label class="form-check-label" for="inlineRadio1">總價</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="static_active[]" value="單價">
+							<label class="form-check-label" for="inlineRadio1">單價</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="static_active[]" value="屋齡">
+							<label class="form-check-label" for="inlineRadio1">屋齡</label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="static_active[]" value="交易總量">
+							<label class="form-check-label" for="inlineRadio1">交易總量</label>
+							</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="" value="單價">
+							<label class="form-check-label" for="inlineRadio1">預留</label>
+						</div>
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="" value="屋齡">
+							<label class="form-check-label" for="inlineRadio1">預留</label>
+						</div>
+					</div>
+					<button id="submit-button" type="submit" class="btn btn-primary bottom mb-2 ml-2">Submit</button>	
+				</div>
+			</div>	
+		</form>
+		<div id="page-content-wrapper">
+			<div class='container-fluid'>
+				<div class="highchart-main" id="container" >
+
 				</div>
 			</div>
-			<main class="col-md-9 ml-sm-auto col-lg-10" id="main-window">
-				<div class="d-flex justify-content-between flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">分析表格</h1>
-				</div>	
-				<div class="highchart-main" id="container" >
-				</div>
-			</main>		
-		</div>
+		</div>	
 	</div>
+	<script>
 
+	</script>
 </body>
 </html>

@@ -32,4 +32,11 @@ $(function(){
 	}
 	});
 
+	$(".static-button-option").click(function(){
+		if 
+		$('#sidebar-menu').toggleClass("toggled");
+		$('#page-content-wrapper').toggleClass("active");
+		})
+
+
 })

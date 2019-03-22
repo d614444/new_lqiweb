@@ -1,5 +1,6 @@
 body{
-	font-family: 微軟正黑體
+	font-family: 微軟正黑體;
+	overflow-x: hidden;
 }
 .sidebar{
 	top: 0;
@@ -39,60 +40,100 @@ body{
 	background-color:  #21212933;
 	border-color: #21212933
 }
-.menu-bar{
-	position: sticky;
-	top: 48px;
-	height: calc(100vh - 48px);
-	padding-top: 1rem;
-	padding-left: 1.2rem;
-	overflow-x: hidden;
-	overflow-y: auto;
-}
 
-
-
-#button-landstatic-1{
-	background-color: rgba(0, 0, 0, 0.3);
-	border-color: rgba(0, 0, 0, 0.3);
-	border-radius: 20%;
+.wrapper{
+	display: flex;
+	width: 100%;
 	
 }
-#button-landstatic-2{
-	background-image: url('/static/images/204-000購買能力.png');
+#sidebar{
+	width: 50px;
+	top: 0;
+	left: 0;
+	background: rgb(231, 235, 239);
+	z-index: 999;
+	height: 100vh
+}
+#static-icon-1{
+	background: url("/static/images/201-000實價資料.png");
+	background-color:rgba(0, 0, 0, 0.5);
 	background-repeat: no-repeat;
-	background-color: rgba(0, 0, 0, 0.3);
-	border-color: rgba(0, 0, 0, 0.3);
-	width: 33px;
-	height: 33px ;
-	
+	width: 31px;
+	height: 30px;
+	border: rgba(0, 0, 0, 0.5);
 }
-.sidebar-options{
-	
-	color: black; text-shadow: rgba(0, 0, 0, 0.3) 0.1em 0.1em 0.2em;
-	text-decoration: none;
-	
-}
-.sidebar-options-text{
-	padding-left: 14px;
-}
-.delete-button{
-	background-image: url('/static/images/x-button .png');
+
+#static-icon-2{
+	background: url("/static/images/204-000購買能力.png");
+	background-color:rgba(0, 0, 0, 0.5);
 	background-repeat: no-repeat;
-	background-color: rgba(0, 0, 0, 0);
-	border-color: rgba(0, 0, 0, 0);
-	width: 24px;
-	height: 25px ;
+	width: 31px;
+	height: 30px;
+	border: rgba(0, 0, 0, 0.5);
 }
-.sidebar-options:focus, .sidebar-options:hover {
+.static-button{
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	padding-top: 12px;
+}
+.controlls{
+	height: 100%;
+	position: relative;
+}
+#sidebar-menu{
+width: 260px;
+background: rgba(11, 17, 16, 0.12);
+margin-left: 8px;
+min-height: 100%;
+margin-left: -17rem;
+ -webkit-transition: margin .25s ease-out;
+-moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+  position: absolute;
 
-    text-decoration: none;
+z-index: 1;
+}
+#sidebar-menu-2{
+width: 260px;
+background: rgba(11, 17, 16, 0.12);
+margin-left: 8px;
+min-height: 100%;
+margin-left: -17rem;
+ -webkit-transition: margin .25s ease-out;
+-moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+  position: absolute;
+}
+
+
+#page-content-wrapper{
+	width: 100%;
+	min-width: 0;
+	-webkit-transition: margin .25s ease-out;
+-moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+
 
 }
-#landstatic{
-	
-	height: 34vh;
+
+#sidebar-menu.toggled {
+  margin-left: 0.5rem;
 }
-.tooltip.in {
-  opacity: 3;
-  font-family: "Arial"
+#sidebar-menu-2.toggled {
+  margin-left: 0.5rem;
+}
+.form-row{
+	padding: 10px;
+}
+#container{
+	width:100%;
+}
+.active{
+	width: 100%;
+	margin-left: 17rem;
+	min-width: 0;
 }
