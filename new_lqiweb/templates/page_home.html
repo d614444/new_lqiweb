@@ -20,6 +20,7 @@
 	<script type = "text/javascript" src ="{% static "js/area_list.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/post_ajax_data_people_static_data.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/button-control.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/slider-control.js" %}"></script>
 
 
 	<script type="text/javascript" src="{% static "js/csrftoken.js" %}"></script>
@@ -54,7 +55,7 @@
 		</div>
 		<form id="static-form">
 			<div class="controlls">
-				<div class='sidebar-menu' id='sidebar-menu'>
+				<div class='sidebar-menu' id='sidebar-menu-1'>
 					<div class="form-row" >
 						<div class="form-group col-md-6">
 							<label for="City-input" >請選擇縣市</label>
@@ -66,13 +67,16 @@
 						</div>
 					</div>
 					<div class="dropdown-divider"></div>
+					<div class="area-delete">
+						<button type="button" class="btn btn-primary delete-button" ></button>
+					</div>
 					<div class="form-group">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="static_active[]" value="總價">
+							<input class="form-check-input form-related" id="total-price-checkbox" type="checkbox" name="static_active[]" value="總價">
 							<label class="form-check-label" for="inlineRadio1">總價</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="static_active[]" value="單價">
+							<input class="form-check-input form-related" id="single-price-checkbox" type="checkbox" name="static_active[]" value="單價">
 							<label class="form-check-label" for="inlineRadio1">單價</label>
 						</div>
 						<div class="form-check form-check-inline">
@@ -84,30 +88,35 @@
 						<div class="form-check form-check-inline">
 							<input class="form-check-input" type="checkbox" name="static_active[]" value="交易總量">
 							<label class="form-check-label" for="inlineRadio1">交易總量</label>
-							</div>
+						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="" value="單價">
+							<input class="form-check-input" type="checkbox" name="" value="單價" disabled >
 							<label class="form-check-label" for="inlineRadio1">預留</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="" value="屋齡">
+							<input class="form-check-input" type="checkbox" name="" value="單價" disabled >
 							<label class="form-check-label" for="inlineRadio1">預留</label>
 						</div>
 					</div>
+					<div class="form-group">
+						<div class="form-check form-check-inline">
+							<input id="total-price-enabled" class="form-related" type="checkbox">總價區間
+						</div>
+						<div class="form-check form-check-inline slider-bar">
+							<input id="total-price"  name="static_active[] "type="text" class="form-check-input" value="" data-slider-min="100" data-slider-max="20000" data-slider-step="500" data-slider-value="[100,20000] " data-slider-enabled="false"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-check form-check-inline">
+							<input id="single-price-enabled" class='form-related' type="checkbox"/>單價區間
+						</div>
+						<div class="form-check form-check-inline slider-bar">
+							<input id="single-price"  name="static_active[]"type="text" class="form-check-input" value="" data-slider-min="20" data-slider-max="300" data-slider-step="10" data-slider-value="[20,300]" data-slider-enabled="false"/>
+						</div>
+					</div>			
 					<button id="submit-button" type="submit" class="btn btn-primary bottom mb-2 ml-2">Submit</button>	
 				</div>
-				<div class='sidebar-menu-2' id='sidebar-menu-2'>
-					<div class="form-row" >
-						<div class="form-group col-md-6">
-							<label for="City-input" >請選擇縣市</label>
-							<select id="City-input" class="form-control" name="City-input"></select>
-						</div>
-						<div class="form-group col-md-6">
-							<label for="Area-input" >請選擇區域</label>
-							<select id="Area-input" class="form-control" name="Area-input"></select>
-						</div>
-					</div>
-					<div class="dropdown-divider"></div>
+				<div class='sidebar-menu' id='sidebar-menu-2'>
 					<div class="form-group">
 						<div class="form-check form-check-inline">
 							<input class="form-check-input" type="checkbox" name="static_active[]" value="總價">
@@ -149,6 +158,7 @@
 		</div>	
 	</div>
 	<script>
+
 
 	</script>
 </body>

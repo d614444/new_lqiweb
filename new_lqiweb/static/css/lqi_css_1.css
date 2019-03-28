@@ -81,7 +81,7 @@ body{
 	height: 100%;
 	position: relative;
 }
-#sidebar-menu{
+#sidebar-menu-1{
 width: 260px;
 background: rgba(11, 17, 16, 0.12);
 margin-left: 8px;
@@ -120,7 +120,7 @@ margin-left: -17rem;
 
 }
 
-#sidebar-menu.toggled {
+#sidebar-menu-1.toggled {
   margin-left: 0.5rem;
 }
 #sidebar-menu-2.toggled {
@@ -129,6 +129,9 @@ margin-left: -17rem;
 .form-row{
 	padding: 10px;
 }
+.form-group{
+	padding: 2px;
+}
 #container{
 	width:100%;
 }
@@ -136,4 +139,23 @@ margin-left: -17rem;
 	width: 100%;
 	margin-left: 17rem;
 	min-width: 0;
+}
+.slider-bar{
+	padding-left: 14px;
+}
+.tooltip.in{
+	opacity: 3;
+	font-family: "Arial"
+}
+.area-delete{
+	text-align: right;
+    padding-right: 13px;
+}
+.delete-button{
+	background-image: url('/static/images/x-button .png');
+	background-repeat: no-repeat;
+	background-color: rgba(0, 0, 0, 0);
+	border-color: rgba(0, 0, 0, 0);
+	width: 24px;
+	height: 25px ;
 }

@@ -90,22 +90,42 @@ class lqicustomapi(APIView):
             price_list_single = []
             price_list_time = []
             price_list_totaltrade=[]
+            landdata_list=''
+            totalname=''
+            singlename=''
+            yearname=''
+            countname=''
             global content
             country = country_list[data_list[0]]
             area = data_list[1]
+            
+            try:
+                find_index_total_price = [i for i, a in enumerate(data_list) if "總價區間" in a]
+                find_index_single_price = [i for i, a in enumerate(data_list) if "單價區間" in a]
+                print (data_list[find_index_total_price[0]])
+            except:
+                pass
+            if (find_index_total_price) or (find_index_single_price):
+                total_range = data_list[find_index_total_price[0]].split(',')
+                single_range = data_list[find_index_single_price[0]].split(',')
+                total_range_min = total_range[1]
+                total_range_max = total_range[2]
+                single_range_min = single_range[1]
+                single_range_max = single_range[2]
+                print (total_range_min, total_range_max, single_range_min, single_range_max)
 
-            if data_list[1] == "全部":
-                landdata_list = call_landdata(country)
-                totalname = data_list[0]+"總價"
-                singlename = data_list[0]+"單價"
-                yearname = data_list[0]+"屋齡"
-                countname = data_list[0]+"交易總量"               
-            else:
-                landdata_list = call_landdata_area(country, area)
-                totalname = data_list[0] + area +"總價"
-                singlename = data_list[0] + area +"單價"
-                yearname = data_list[0] + area + "屋齡"     
-                countname = data_list[0]+"交易總量"
+                if data_list[1] == "全部":
+                    landdata_list = call_landdata_range(country, total_range_min, total_range_max, find_index_total_price)
+                    totalname = data_list[0]+"總價"
+                    singlename = data_list[0]+"單價"
+                    yearname = data_list[0]+"屋齡"
+                    countname = data_list[0]+"交易總量"               
+                else:
+                    landdata_list = call_landdata_area(country, area)
+                    totalname = data_list[0] + area +"總價"
+                    singlename = data_list[0] + area +"單價"
+                    yearname = data_list[0] + area + "屋齡"     
+                    countname = data_list[0]+"交易總量"
               
             for year_r in year:
                 for month_r in month:
@@ -221,11 +241,33 @@ def call_landdata_area(country, area):
                                     'pricetable5_f01__f14')                                   
     return average_list
 
+def call_landdata_range(country, total_range_min, total_range_max, find_index_total_price):
+    if (find_index_total_price):
+     average_list = Pricetable1.objects.filter(
+                   f32=country
+                    ).filter(
+                    Q(f11=2)|Q(f11=3)|Q(f11=7)|Q(f11=8)|Q(f11=9)|Q(f11=12)
+                    ).filter(
+                    pricetable5_f01__f28='N'
+                    ).filter(
+                    pricetable7_f01__f21a__range=(total_range_min, total_range_max)
+                    ).exclude(
+                    pricetable7_f01__f21a__isnull=True
+                    ).exclude(pricetable7_f01__f21a=0
+                    ).exclude(pricetable5_f01__f14__isnull=True
+                    ).exclude(pricetable5_f01__f14=''
+                    ).values_list('f00', 'pricetable7_f01__f21a', 
+                                    'pricetable7_f01__f22a', 'pricetable5_f01__f07',
+                                    'pricetable5_f01__f14')
+
+    
+                    
+    return average_list                                    
+
 def fix_mean(list_totalprice):
     total_mean = np.mean(list_totalprice)
     total_mean_round = round(total_mean, 2)
     total_mean_round = np.where(np.isnan(total_mean_round), 0, total_mean_round)
-
     return total_mean_round    
                     
 def month_cal(average_list, price_list):

@@ -3,15 +3,26 @@ $(function(){
 
 		$('#static-form').submit(function(event) {
 			event.preventDefault();
-			var min = $('#total-price').data('slider');
+			var min = $('#total-price').attr('data-value');
 			console.log(min)
 			var data_add ={ 'static_active[]' : [] }
+			/*data_add['static_active[]'].push($(this).val());*/
 			$(":checked").each(function(){
-			
-				data_add['static_active[]'].push($(this).val());
-			});
-			console.log(data_add)
+				if (this.id=='total-price-enabled'){
+					var data_total = $('#total-price').attr('data-value')
+					data_add['static_active[]'].push('總價區間,'+data_total)
+				}
+				else if(this.id=='single-price-enabled'){
+					var data_single = $('#single-price').attr('data-value')
+					data_add['static_active[]'].push('單價區間,'+data_single)
+				}
+				else{
+					data_add['static_active[]'].push($(this).val());
+	
+				}
 
+			});
+			
 		$.ajax({
 			async : false,
 			type: "POST",

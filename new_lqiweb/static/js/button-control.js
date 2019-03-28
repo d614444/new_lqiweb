@@ -1,42 +1,22 @@
 $(function(){
-	$('#total-price-enabled').prop('checked', false);
-	$('#single-price-enabled').prop('checked', false);
 
-	$(".delete-button").click(function() {
-		$('input[type=checkbox]').prop('checked', false);
-		$("#single-price").slider("disable")
-		$("#total-price").slider("disable")
-	});
-
-	$("#total-price").slider();
-
-	$('#total-price-enabled').click(function(){
-	if(this.checked){
-		$("#total-price").slider("enable");
-
-	}
-	else{
-		$("#total-price").slider("disable")
-	}
-	});
-
-	$("#single-price").slider();
-
-	$('#single-price-enabled').click(function(){
-	if(this.checked){
-		$("#single-price").slider("enable");
-
-	}
-	else{
-		$("#single-price").slider("disable")
-	}
-	});
 
 	$(".static-button-option").click(function(){
-		if 
-		$('#sidebar-menu').toggleClass("toggled");
-		$('#page-content-wrapper').toggleClass("active");
+		var a = ($(this).attr('id').slice(-2))
+		if ($('#sidebar-menu'+a).hasClass('toggled'))
+		{
+			$('#sidebar-menu'+a).removeClass('toggled')
+			$('#page-content-wrapper').removeClass('active')
+			return false
+		}
+
+		$('.sidebar-menu').removeClass('toggled')
+		$('#sidebar-menu'+a).addClass('toggled')
+		$('#page-content-wrapper').addClass('active')
+			return false
+	
 		})
 
+	
 
 })
